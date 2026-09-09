@@ -116,7 +116,6 @@ function App() {
       if (e.key === 'ArrowRight') changeProduct(1)
       if (e.key === 'ArrowLeft') changeProduct(-1)
     }
-
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   })
@@ -124,7 +123,6 @@ function App() {
   function resetParallax(immediate = true) {
     const targets = [titleRef.current, detailInfoRef.current, ...bottleRefs.current].filter(Boolean)
     gsap.killTweensOf(targets)
-
     const vars = {
       '--parallax-x': '0px',
       '--parallax-y': '0px',
@@ -134,13 +132,11 @@ function App() {
       ease: 'power3.out',
       overwrite: 'auto',
     }
-
     targets.forEach((node) => immediate ? gsap.set(node, vars) : gsap.to(node, vars))
   }
 
   function changeProduct(direction) {
     if (lockedRef.current || detailOpen) return
-
     lockedRef.current = true
     resetParallax(true)
 
@@ -154,16 +150,7 @@ function App() {
     setBottlePosition(entering, direction > 0 ? positions.hiddenRight : positions.hiddenLeft)
     setBottlePosition(incoming, direction > 0 ? positions.hiddenRight : positions.hiddenLeft)
 
-    gsap.killTweensOf([
-      titleRef.current,
-      infoRef.current,
-      counterRef.current,
-      actionRef.current,
-      oldHero,
-      incoming,
-      entering,
-      exiting,
-    ])
+    gsap.killTweensOf([titleRef.current, infoRef.current, counterRef.current, actionRef.current, oldHero, incoming, entering, exiting])
 
     const timeline = gsap.timeline({
       defaults: { ease: 'power4.inOut' },
@@ -214,7 +201,6 @@ function App() {
 
   const onPointerMove = (e) => {
     if (!stageRef.current || lockedRef.current) return
-
     const r = stageRef.current.getBoundingClientRect()
     const x = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width - 0.5) * 2))
     const y = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height - 0.5) * 2))
@@ -289,7 +275,6 @@ function App() {
 
   const openDetail = () => {
     if (lockedRef.current || detailOpen) return
-
     lockedRef.current = true
     resetParallax(true)
 
@@ -308,13 +293,9 @@ function App() {
       actionRef.current,
     ])
 
-    // Establish every visible element at its hidden starting state BEFORE
-    // switching the CSS detail state. This removes the one-frame opacity flash.
     gsap.set(detailRef.current, { opacity: 0 })
     gsap.set(detailInfoRef.current, {
       opacity: 0,
-      x: -42,
-      y: 0,
       filter: 'blur(8px)',
       '--parallax-x': '0px',
       '--parallax-y': '0px',
@@ -362,7 +343,6 @@ function App() {
         }, 0.08)
         .to(detailInfoRef.current, {
           opacity: 1,
-          x: 0,
           filter: 'blur(0px)',
           duration: 0.55,
         }, 0.12)
@@ -371,7 +351,6 @@ function App() {
 
   const closeDetail = () => {
     if (!detailOpen || lockedRef.current) return
-
     lockedRef.current = true
     resetParallax(true)
 
@@ -395,18 +374,13 @@ function App() {
       actionRef.current,
     ])
 
-    // Prepare the homepage at opacity 0 first. Then remove is-detail so the
-    // homepage is allowed to participate in the same crossfade instead of
-    // producing the broken "only bottle + BACK" frame.
     gsap.set(titleRef.current, { opacity: 0, y: -12, filter: 'blur(6px)' })
     gsap.set(infoRef.current, { opacity: 0, y: 12, filter: 'blur(6px)' })
     gsap.set(counterRef.current, { opacity: 0, y: 12, filter: 'blur(6px)' })
     gsap.set(actionRef.current, { opacity: 0, y: 12, filter: 'blur(6px)' })
     gsap.set(detailButtonRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
-    gsap.set(detailInfoRef.current, { opacity: 1, x: 0, filter: 'blur(0px)' })
+    gsap.set(detailInfoRef.current, { opacity: 1, filter: 'blur(0px)' })
 
-    // Release the CSS detail lock BEFORE the animation. Inline opacity:0 keeps
-    // the homepage hidden until GSAP fades it in, eliminating the blank frame.
     setDetailOpen(false)
 
     const timeline = gsap.timeline({
@@ -418,24 +392,26 @@ function App() {
           const prev = activeRef.current === wrap(index + 1)
           setBottlePosition(node, next ? positions.next : prev ? positions.prev : positions.hiddenRight)
         })
-
         setBottlePosition(hero, positions.hero)
         resetParallax(true)
         gsap.set(detailRef.current, { opacity: 0 })
-        gsap.set(detailInfoRef.current, { opacity: 0, x: -42, filter: 'blur(8px)' })
+        gsap.set(detailInfoRef.current, { opacity: 0, filter: 'blur(8px)' })
         gsap.set(detailButtonRef.current, { opacity: 0, y: -6, filter: 'blur(4px)' })
         lockedRef.current = false
       },
     })
 
     timeline
-      .to([detailInfoRef.current, detailButtonRef.current], {
+      .to(detailInfoRef.current, {
         opacity: 0,
-        x: -18,
+        filter: 'blur(5px)',
+        duration: 0.22,
+      }, 0)
+      .to(detailButtonRef.current, {
+        opacity: 0,
         y: -6,
         filter: 'blur(5px)',
         duration: 0.22,
-        stagger: 0.02,
       }, 0)
       .to(detailRef.current, { opacity: 0, duration: 0.42 }, 0.02)
       .to(hero, {
