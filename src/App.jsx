@@ -4,7 +4,7 @@ import { products } from './data/products'
 import './index.css'
 
 const positions = {
-  hero: { x: '0vw', y: '0vh', scale: 1.12, rotation: 0, opacity: 1, filter: 'blur(0px)', zIndex: 4 },
+  hero: { x: '0vw', y: '0vh', scale: 1.2, rotation: 0, opacity: 1, filter: 'blur(0px)', zIndex: 4 },
   next: { x: '35vw', y: '2vh', scale: 0.42, rotation: 8, opacity: 0.5, filter: 'blur(5px)', zIndex: 2 },
   prev: { x: '-35vw', y: '2vh', scale: 0.42, rotation: -8, opacity: 0.5, filter: 'blur(5px)', zIndex: 2 },
   hiddenRight: { x: '64vw', y: '6vh', scale: 0.25, rotation: 13, opacity: 0, filter: 'blur(12px)', zIndex: 1 },
@@ -74,19 +74,23 @@ function App() {
     if (lockedRef.current || detailOpen) return
     lockedRef.current = true
     setDetailOpen(true)
+
     requestAnimationFrame(() => {
       const hero = bottleRefs.current[activeRef.current]
       if (!hero || !detailRef.current || !detailBottleRef.current || !detailInfoRef.current || !detailButtonRef.current) { lockedRef.current = false; return }
+
+      gsap.killTweensOf([hero, detailRef.current, detailBottleRef.current, detailInfoRef.current, detailButtonRef.current])
       gsap.set(detailRef.current, { opacity: 1 })
       gsap.set(detailInfoRef.current, { opacity: 0, x: -55, filter: 'blur(8px)' })
       gsap.set(detailButtonRef.current, { opacity: 0, y: -12 })
-      gsap.set(detailBottleRef.current, { opacity: 0, x: '7vw', scale: .92, rotation: 0 })
+      gsap.set(detailBottleRef.current, { opacity: 0, x: '8vw', scale: .88, rotation: 0 })
+
       gsap.timeline({ defaults: { ease: 'power3.inOut' }, onComplete: () => { lockedRef.current = false } })
         .to([titleRef.current, infoRef.current, counterRef.current, actionRef.current], { opacity: 0, y: -18, filter: 'blur(6px)', duration: .28, stagger: .02 }, 0)
-        .to(hero, { x: '25vw', y: '0vh', scale: .82, opacity: 0, duration: .82 }, 0)
-        .to(detailBottleRef.current, { opacity: 1, x: '0vw', scale: 1.08, duration: .78 }, .25)
-        .to(detailInfoRef.current, { opacity: 1, x: 0, filter: 'blur(0px)', duration: .62, ease: 'power3.out' }, .35)
-        .to(detailButtonRef.current, { opacity: 1, y: 0, duration: .4, ease: 'power3.out' }, .42)
+        .to(hero, { x: '24vw', y: '0vh', scale: .92, opacity: 0, duration: .82 }, 0)
+        .to(detailBottleRef.current, { opacity: 1, x: '0vw', scale: 1.08, duration: .82, ease: 'power3.out' }, .24)
+        .to(detailInfoRef.current, { opacity: 1, x: 0, filter: 'blur(0px)', duration: .62, ease: 'power3.out' }, .34)
+        .to(detailButtonRef.current, { opacity: 1, y: 0, duration: .4, ease: 'power3.out' }, .4)
     })
   }
 
@@ -95,27 +99,31 @@ function App() {
     lockedRef.current = true
     const hero = bottleRefs.current[activeRef.current]
     if (!hero || !detailRef.current || !detailBottleRef.current || !detailInfoRef.current || !detailButtonRef.current) { lockedRef.current = false; return }
+
+    gsap.killTweensOf([hero, detailRef.current, detailBottleRef.current, detailInfoRef.current, detailButtonRef.current])
     gsap.timeline({ defaults: { ease: 'power3.inOut' }, onComplete: () => { setDetailOpen(false); lockedRef.current = false } })
       .to([detailInfoRef.current, detailButtonRef.current], { opacity: 0, x: -30, y: -8, filter: 'blur(6px)', duration: .28, stagger: .03 }, 0)
       .to(detailBottleRef.current, { x: '5vw', scale: .92, opacity: 0, duration: .48 }, .04)
       .to(detailRef.current, { opacity: 0, duration: .35 }, .15)
-      .set(hero, { opacity: 1, x: '25vw', y: '0vh', scale: .82, rotation: 0 })
-      .to(hero, { x: '0vw', y: '0vh', scale: 1.12, duration: .7, ease: 'power4.inOut' }, .28)
+      .set(hero, { opacity: 1, x: '24vw', y: '0vh', scale: .92, rotation: 0 })
+      .to(hero, { x: '0vw', y: '0vh', scale: 1.2, duration: .7, ease: 'power4.inOut' }, .28)
       .to([titleRef.current, infoRef.current, counterRef.current, actionRef.current], { opacity: 1, y: 0, filter: 'blur(0px)', duration: .48, stagger: .03, ease: 'power3.out' }, .44)
   }
 
   return <main ref={stageRef} className={`showcase ${detailOpen ? 'is-detail' : ''}`} onPointerMove={onPointerMove} onWheel={onWheel} style={{ '--tone-1': current.tones[0], '--tone-2': current.tones[1], '--tone-3': current.tones[2], '--accent': current.accent }}>
     <div className="atmosphere" aria-hidden="true"><span className="orb orb-one" /><span className="orb orb-two" /><span className="grain" /></div>
-    {!detailOpen && <>
-      <header className="stage-header"><a className="brand" href="#top">NOIR <em>DISTILLERY</em></a><span className="edition">CURATED SPIRITS / 2026</span></header>
-      <section className="product-stage" aria-label="Noir Distillery bottle showcase"><div className="title-wrap" ref={titleRef} aria-hidden="true"><p>THE PRIVATE COLLECTION</p><h1>{current.displayTitle}</h1></div>{products.map((p, i) => <img key={p.id} ref={(node) => { bottleRefs.current[i] = node }} className={`bottle bottle-${p.id}`} src={p.image} alt={p.name} draggable="false" />)}<div className="stage-caption stage-caption-left"><span>PREVIOUS</span><i /></div><div className="stage-caption stage-caption-right"><i /><span>NEXT</span></div></section>
-      <footer className="stage-foot"><section className="product-info" ref={infoRef} aria-live="polite"><p className="eyebrow">{current.series}</p><h2>{current.name}</h2><p className="category">{current.category}</p><p className="description">{current.description}</p><nav className="navigation" aria-label="Product navigation"><button type="button" onClick={() => changeProduct(-1)} aria-label="Previous bottle">←</button><button type="button" onClick={() => changeProduct(1)} aria-label="Next bottle">→</button></nav></section><section className="product-action"><button className="explore" ref={actionRef} type="button" onClick={openDetail}>EXPLORE BOTTLE <span>→</span></button><p className="counter" ref={counterRef}><b>{String(active + 1).padStart(2, '0')}</b> / {String(products.length).padStart(2, '0')}</p></section></footer>
-    </>}
-    {detailOpen && <section className="detail-view" ref={detailRef} aria-label={`${current.name} details`}>
+
+    <header className="stage-header"><a className="brand" href="#top">NOIR <em>DISTILLERY</em></a><span className="edition">CURATED SPIRITS / 2026</span></header>
+
+    <section className="product-stage" aria-label="Noir Distillery bottle showcase"><div className="title-wrap" ref={titleRef} aria-hidden="true"><p>THE PRIVATE COLLECTION</p><h1>{current.displayTitle}</h1></div>{products.map((p, i) => <img key={p.id} ref={(node) => { bottleRefs.current[i] = node }} className={`bottle bottle-${p.id}`} src={p.image} alt={p.name} draggable="false" />)}<div className="stage-caption stage-caption-left"><span>PREVIOUS</span><i /></div><div className="stage-caption stage-caption-right"><i /><span>NEXT</span></div></section>
+
+    <footer className="stage-foot"><section className="product-info" ref={infoRef} aria-live="polite"><p className="eyebrow">{current.series}</p><h2>{current.name}</h2><p className="category">{current.category}</p><p className="description">{current.description}</p><nav className="navigation" aria-label="Product navigation"><button type="button" onClick={() => changeProduct(-1)} aria-label="Previous bottle">←</button><button type="button" onClick={() => changeProduct(1)} aria-label="Next bottle">→</button></nav></section><section className="product-action"><button className="explore" ref={actionRef} type="button" onClick={openDetail}>EXPLORE BOTTLE <span>→</span></button><p className="counter" ref={counterRef}><b>{String(active + 1).padStart(2, '0')}</b> / {String(products.length).padStart(2, '0')}</p></section></footer>
+
+    <section className="detail-view" ref={detailRef} aria-hidden={!detailOpen} aria-label={`${current.name} details`}>
       <button className="detail-back" ref={detailButtonRef} type="button" onClick={closeDetail} aria-label="Back to bottle showcase"><span>←</span> BACK</button>
       <div className="detail-copy" ref={detailInfoRef}><p className="eyebrow">{current.category}</p><h2>{current.name}</h2><p className="detail-description">{current.detail}</p><dl><div><dt>STYLE</dt><dd>{current.style}</dd></div><div><dt>ORIGIN</dt><dd>{current.origin}</dd></div></dl></div>
       <div className="detail-bottle-wrap"><img className="detail-bottle" ref={detailBottleRef} src={current.image} alt={current.name} draggable="false" /></div>
-    </section>}
+    </section>
   </main>
 }
 
