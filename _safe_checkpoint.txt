@@ -1,0 +1,1 @@
+Safety checkpoint before pointer-interaction fix. Existing backup branches: safe/current-state-2026-09-09 and safe/pre-refinement-2026-09-09.
