@@ -99,7 +99,13 @@ function App() {
     if (!hero || !detailRef.current || !detailInfoRef.current || !detailButtonRef.current) { lockedRef.current = false; return }
     gsap.killTweensOf([hero, ...otherBottles, detailRef.current, detailInfoRef.current, detailButtonRef.current, titleRef.current, infoRef.current, counterRef.current, actionRef.current])
 
+    // Restore the main-screen UI immediately. The return animation should move
+    // the bottle back into the already-visible interface, not reveal the UI afterward.
     gsap.set(titleRef.current, { opacity: .22, y: 0, filter: 'blur(0px)', scale: 1 })
+    gsap.set(infoRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
+    gsap.set(counterRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
+    gsap.set(actionRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
+    gsap.set(detailButtonRef.current, { opacity: 0, y: -8, x: 0, filter: 'blur(0px)' })
 
     gsap.timeline({ defaults: { ease: 'power3.inOut' }, onComplete: () => {
       otherBottles.forEach((node) => {
@@ -120,7 +126,6 @@ function App() {
       .to([detailInfoRef.current, detailButtonRef.current], { opacity: 0, x: -30, y: -8, filter: 'blur(6px)', duration: .28, stagger: .03 }, 0)
       .to(detailRef.current, { opacity: 0, filter: 'blur(0px)', duration: .35 }, .12)
       .to(hero, { x: '0vw', y: '0vh', scale: 1.2, opacity: 1, zIndex: 4, filter: 'blur(0px)', duration: .72, ease: 'power4.inOut' }, .2)
-      .to([titleRef.current, infoRef.current, counterRef.current, actionRef.current], { opacity: 1, y: 0, filter: 'blur(0px)', duration: .48, stagger: .03, ease: 'power3.out' }, .38)
   }
 
   return <main ref={stageRef} className={`showcase ${detailOpen ? 'is-detail' : ''}`} onPointerMove={onPointerMove} onWheel={onWheel} style={{ '--tone-1': current.tones[0], '--tone-2': current.tones[1], '--tone-3': current.tones[2], '--accent': current.accent }}>
