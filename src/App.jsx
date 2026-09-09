@@ -100,21 +100,27 @@ function App() {
     const hero = bottleRefs.current[activeRef.current]
     const otherBottles = bottleRefs.current.filter((node) => node && node !== hero)
     if (!hero || !detailRef.current || !detailInfoRef.current || !detailButtonRef.current) { lockedRef.current = false; return }
-    gsap.killTweensOf([hero, ...otherBottles, detailRef.current, detailInfoRef.current, detailButtonRef.current])
+    gsap.killTweensOf([hero, ...otherBottles, detailRef.current, detailInfoRef.current, detailButtonRef.current, titleRef.current, infoRef.current, counterRef.current, actionRef.current])
 
     gsap.timeline({ defaults: { ease: 'power3.inOut' }, onComplete: () => {
-      otherBottles.forEach((node, i) => {
+      otherBottles.forEach((node) => {
         const index = bottleRefs.current.indexOf(node)
         const next = activeRef.current === index + 1 || (activeRef.current === 0 && index === products.length - 1)
         const prev = activeRef.current === index - 1 || (activeRef.current === products.length - 1 && index === 0)
         gsap.set(node, next ? positions.next : prev ? positions.prev : positions.hiddenRight)
       })
+      // Explicitly restore every main-screen visual to its canonical state.
+      gsap.set(hero, positions.hero)
+      gsap.set(titleRef.current, { opacity: .22, x: 0, y: 0, filter: 'blur(0px)', scale: 1 })
+      gsap.set(infoRef.current, { opacity: 1, x: 0, y: 0, filter: 'blur(0px)' })
+      gsap.set(counterRef.current, { opacity: 1, x: 0, y: 0, filter: 'blur(0px)' })
+      gsap.set(actionRef.current, { opacity: 1, x: 0, y: 0, filter: 'blur(0px)' })
       setDetailOpen(false)
       lockedRef.current = false
     } })
       .to([detailInfoRef.current, detailButtonRef.current], { opacity: 0, x: -30, y: -8, filter: 'blur(6px)', duration: .28, stagger: .03 }, 0)
       .to(detailRef.current, { opacity: 0, duration: .35 }, .12)
-      .to(hero, { x: '0vw', y: '0vh', scale: 1.2, opacity: 1, zIndex: 4, duration: .72, ease: 'power4.inOut' }, .2)
+      .to(hero, { x: '0vw', y: '0vh', scale: 1.2, opacity: 1, zIndex: 4, filter: 'blur(0px)', duration: .72, ease: 'power4.inOut' }, .2)
       .to([titleRef.current, infoRef.current, counterRef.current, actionRef.current], { opacity: 1, y: 0, filter: 'blur(0px)', duration: .48, stagger: .03, ease: 'power3.out' }, .38)
   }
 
