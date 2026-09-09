@@ -23,8 +23,13 @@ function App() {
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       bottleRefs.current.forEach((node, i) => node && gsap.set(node, i === 0 ? positions.hero : i === 1 ? positions.next : i === products.length - 1 ? positions.prev : positions.hiddenRight))
-      gsap.fromTo('.stage-header, .stage-foot', { opacity: 0, y: 18 }, { opacity: 1, y: 0, stagger: .08, duration: 1.1, ease: 'power3.out' })
-      gsap.fromTo(titleRef.current, { opacity: 0, scale: .96 }, { opacity: .22, scale: 1, duration: 1.25, ease: 'expo.out' })
+
+      // Keep the first paint hidden so the intro never flashes fully visible before the staggered entrance.
+      gsap.set(['.stage-header', '.stage-foot'], { opacity: 0, y: 18 })
+      gsap.set(titleRef.current, { opacity: 0, y: 0, scale: .96, filter: 'blur(5px)' })
+
+      gsap.to(['.stage-header', '.stage-foot'], { opacity: 1, y: 0, stagger: .08, duration: 1.1, ease: 'power3.out' })
+      gsap.to(titleRef.current, { opacity: .22, scale: 1, filter: 'blur(0px)', duration: 1.25, ease: 'expo.out', delay: .08 })
     }, stageRef)
     return () => ctx.revert()
   }, [])
@@ -80,9 +85,10 @@ function App() {
     requestAnimationFrame(() => {
       if (!hero || !detailRef.current || !detailInfoRef.current || !detailButtonRef.current) { lockedRef.current = false; return }
       gsap.killTweensOf([hero, ...otherBottles, detailRef.current, detailInfoRef.current, detailButtonRef.current])
-      gsap.set(detailRef.current, { opacity: 1 })
+      gsap.set(detailRef.current, { opacity: 1, filter: 'blur(0px)' })
       gsap.set(detailInfoRef.current, { opacity: 0, x: -70, filter: 'blur(10px)' })
-      gsap.set(detailButtonRef.current, { opacity: 0, y: -8 })
+      // Always clear the previous close animation's blur before showing the back control again.
+      gsap.set(detailButtonRef.current, { opacity: 0, y: -8, x: 0, filter: 'blur(0px)' })
       gsap.set(detailBottleRef.current, { opacity: 0 })
 
       gsap.timeline({ defaults: { ease: 'power3.inOut' }, onComplete: () => { lockedRef.current = false } })
@@ -90,7 +96,7 @@ function App() {
         .to(otherBottles, { opacity: 0, scale: .72, filter: 'blur(12px)', duration: .42, stagger: .015, ease: 'power3.out' }, 0)
         .to(hero, { x: '25vw', y: '0vh', scale: 1.32, rotation: 0, opacity: 1, filter: 'blur(0px)', zIndex: 60, duration: .9, ease: 'power4.inOut' }, .03)
         .to(detailInfoRef.current, { opacity: 1, x: 0, filter: 'blur(0px)', duration: .72, ease: 'power3.out' }, .32)
-        .to(detailButtonRef.current, { opacity: 1, y: 0, duration: .45, ease: 'power3.out' }, .4)
+        .to(detailButtonRef.current, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .45, ease: 'power3.out' }, .4)
     })
   }
 
@@ -102,7 +108,6 @@ function App() {
     if (!hero || !detailRef.current || !detailInfoRef.current || !detailButtonRef.current) { lockedRef.current = false; return }
     gsap.killTweensOf([hero, ...otherBottles, detailRef.current, detailInfoRef.current, detailButtonRef.current, titleRef.current, infoRef.current, counterRef.current, actionRef.current])
 
-    // The collection title is intentionally subtle. Never animate it back to full opacity.
     gsap.set(titleRef.current, { opacity: .22, y: 0, filter: 'blur(0px)', scale: 1 })
 
     gsap.timeline({ defaults: { ease: 'power3.inOut' }, onComplete: () => {
@@ -117,11 +122,12 @@ function App() {
       gsap.set(infoRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
       gsap.set(counterRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
       gsap.set(actionRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
+      gsap.set(detailButtonRef.current, { opacity: 0, y: -8, x: 0, filter: 'blur(0px)' })
       setDetailOpen(false)
       lockedRef.current = false
     } })
       .to([detailInfoRef.current, detailButtonRef.current], { opacity: 0, x: -30, y: -8, filter: 'blur(6px)', duration: .28, stagger: .03 }, 0)
-      .to(detailRef.current, { opacity: 0, duration: .35 }, .12)
+      .to(detailRef.current, { opacity: 0, filter: 'blur(0px)', duration: .35 }, .12)
       .to(hero, { x: '0vw', y: '0vh', scale: 1.2, opacity: 1, zIndex: 4, filter: 'blur(0px)', duration: .72, ease: 'power4.inOut' }, .2)
       .to([titleRef.current, infoRef.current, counterRef.current, actionRef.current], { opacity: 1, y: 0, filter: 'blur(0px)', duration: .48, stagger: .03, ease: 'power3.out' }, .38)
   }
