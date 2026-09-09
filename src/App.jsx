@@ -102,11 +102,19 @@ function App() {
     if (!hero || !detailRef.current || !detailInfoRef.current || !detailButtonRef.current) { lockedRef.current = false; return }
     gsap.killTweensOf([hero, ...otherBottles, detailRef.current, detailInfoRef.current, detailButtonRef.current])
 
-    gsap.timeline({ defaults: { ease: 'power3.inOut' }, onComplete: () => { setDetailOpen(false); lockedRef.current = false } })
+    gsap.timeline({ defaults: { ease: 'power3.inOut' }, onComplete: () => {
+      otherBottles.forEach((node, i) => {
+        const index = bottleRefs.current.indexOf(node)
+        const next = activeRef.current === index + 1 || (activeRef.current === 0 && index === products.length - 1)
+        const prev = activeRef.current === index - 1 || (activeRef.current === products.length - 1 && index === 0)
+        gsap.set(node, next ? positions.next : prev ? positions.prev : positions.hiddenRight)
+      })
+      setDetailOpen(false)
+      lockedRef.current = false
+    } })
       .to([detailInfoRef.current, detailButtonRef.current], { opacity: 0, x: -30, y: -8, filter: 'blur(6px)', duration: .28, stagger: .03 }, 0)
       .to(detailRef.current, { opacity: 0, duration: .35 }, .12)
       .to(hero, { x: '0vw', y: '0vh', scale: 1.2, opacity: 1, zIndex: 4, duration: .72, ease: 'power4.inOut' }, .2)
-      .to(otherBottles, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: .42, stagger: .015, ease: 'power3.out' }, .25)
       .to([titleRef.current, infoRef.current, counterRef.current, actionRef.current], { opacity: 1, y: 0, filter: 'blur(0px)', duration: .48, stagger: .03, ease: 'power3.out' }, .38)
   }
 
