@@ -102,6 +102,9 @@ function App() {
     if (!hero || !detailRef.current || !detailInfoRef.current || !detailButtonRef.current) { lockedRef.current = false; return }
     gsap.killTweensOf([hero, ...otherBottles, detailRef.current, detailInfoRef.current, detailButtonRef.current, titleRef.current, infoRef.current, counterRef.current, actionRef.current])
 
+    // The collection title is intentionally subtle. Never animate it back to full opacity.
+    gsap.set(titleRef.current, { opacity: .22, y: 0, filter: 'blur(0px)', scale: 1 })
+
     gsap.timeline({ defaults: { ease: 'power3.inOut' }, onComplete: () => {
       otherBottles.forEach((node) => {
         const index = bottleRefs.current.indexOf(node)
@@ -109,12 +112,11 @@ function App() {
         const prev = activeRef.current === index - 1 || (activeRef.current === products.length - 1 && index === 0)
         gsap.set(node, next ? positions.next : prev ? positions.prev : positions.hiddenRight)
       })
-      // Explicitly restore every main-screen visual to its canonical state.
       gsap.set(hero, positions.hero)
-      gsap.set(titleRef.current, { opacity: .22, x: 0, y: 0, filter: 'blur(0px)', scale: 1 })
-      gsap.set(infoRef.current, { opacity: 1, x: 0, y: 0, filter: 'blur(0px)' })
-      gsap.set(counterRef.current, { opacity: 1, x: 0, y: 0, filter: 'blur(0px)' })
-      gsap.set(actionRef.current, { opacity: 1, x: 0, y: 0, filter: 'blur(0px)' })
+      gsap.set(titleRef.current, { opacity: .22, y: 0, filter: 'blur(0px)', scale: 1 })
+      gsap.set(infoRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
+      gsap.set(counterRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
+      gsap.set(actionRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
       setDetailOpen(false)
       lockedRef.current = false
     } })
