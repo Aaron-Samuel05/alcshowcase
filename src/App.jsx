@@ -23,6 +23,8 @@ function App() {
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       bottleRefs.current.forEach((node, i) => node && gsap.set(node, i === 0 ? positions.hero : i === 1 ? positions.next : i === products.length - 1 ? positions.prev : positions.hiddenRight))
+      if (titleRef.current) gsap.set(titleRef.current, { x: 0, y: 0, rotationX: 0, rotationY: 0 })
+      if (detailInfoRef.current) gsap.set(detailInfoRef.current, { rotationX: 0, rotationY: 0 })
     }, stageRef)
     return () => ctx.revert()
   }, [])
@@ -49,9 +51,11 @@ function App() {
     const oldHero = bottleRefs.current[old], incoming = bottleRefs.current[next]
     const entering = bottleRefs.current[wrap(old + direction * 2)], exiting = bottleRefs.current[wrap(old - direction)]
     gsap.set(entering, direction > 0 ? positions.hiddenRight : positions.hiddenLeft)
+    gsap.killTweensOf([titleRef.current, oldHero, incoming, entering, exiting])
+    gsap.set(titleRef.current, { x: 0, y: 0, rotationX: 0, rotationY: 0 })
     gsap.timeline({ defaults: { ease: 'power4.inOut' } })
       .to(stageRef.current, { '--tone-1': products[next].tones[0], '--tone-2': products[next].tones[1], '--tone-3': products[next].tones[2], '--accent': products[next].accent, duration: .95 }, 0)
-      .to(oldHero, { ...(direction > 0 ? positions.prev : positions.next), duration: .92 }, 0)
+      .to(oldHero, { ...positions.prev, duration: .92 }, 0)
       .to(incoming, { ...positions.hero, duration: .98 }, .03)
       .to(entering, { ...(direction > 0 ? positions.next : positions.prev), duration: .9 }, .08)
       .to(exiting, { ...(direction > 0 ? positions.hiddenLeft : positions.hiddenRight), duration: .72 }, 0)
@@ -63,9 +67,38 @@ function App() {
   }
 
   const onPointerMove = (e) => {
-    const r = stageRef.current.getBoundingClientRect(), x = ((e.clientX - r.left) / r.width - .5) * 2, y = ((e.clientY - r.top) / r.height - .5) * 2
+    if (!stageRef.current) return
+    const r = stageRef.current.getBoundingClientRect()
+    const x = ((e.clientX - r.left) / r.width - .5) * 2
+    const y = ((e.clientY - r.top) / r.height - .5) * 2
+    const parallaxX = x * 9
+    const parallaxY = y * 6
+
     gsap.to(stageRef.current, { '--parallax-x': `${x * 7}px`, '--parallax-y': `${y * 5}px`, '--glow-x': `${50 + x * 13}%`, '--glow-y': `${46 + y * 10}%`, duration: .9, ease: 'power3.out', overwrite: 'auto' })
+
+    // Keep the large collection title responsive to the cursor on the home screen.
+    if (titleRef.current) {
+      gsap.to(titleRef.current, { x: detailOpen ? 0 : parallaxX * .45, y: detailOpen ? 0 : parallaxY * .35, rotationY: detailOpen ? 0 : x * 1.1, rotationX: detailOpen ? 0 : -y * .8, duration: .9, ease: 'power3.out', overwrite: 'auto' })
+    }
+
+    const hero = bottleRefs.current[activeRef.current]
+    if (hero) {
+      gsap.to(hero, { x: detailOpen ? parallaxX * .45 : parallaxX * .35, y: detailOpen ? parallaxY * .3 : parallaxY * .22, rotationY: x * 3.2, rotationX: -y * 2.4, duration: .9, ease: 'power3.out', overwrite: 'auto' })
+    }
+
+    // Detail typography gets the same restrained depth treatment.
+    if (detailOpen && detailInfoRef.current) {
+      gsap.to(detailInfoRef.current, { x: x * 7, y: y * 5, rotationY: x * .8, rotationX: -y * .55, duration: .9, ease: 'power3.out', overwrite: 'auto' })
+    }
   }
+
+  const onPointerLeave = () => {
+    const hero = bottleRefs.current[activeRef.current]
+    if (hero) gsap.to(hero, { x: detailOpen ? '25vw' : 0, y: 0, rotationY: 0, rotationX: 0, duration: .8, ease: 'power3.out', overwrite: 'auto' })
+    if (titleRef.current) gsap.to(titleRef.current, { x: 0, y: 0, rotationY: 0, rotationX: 0, duration: .8, ease: 'power3.out', overwrite: 'auto' })
+    if (detailInfoRef.current) gsap.to(detailInfoRef.current, { x: detailOpen ? 0 : 0, y: 0, rotationY: 0, rotationX: 0, duration: .8, ease: 'power3.out', overwrite: 'auto' })
+  }
+
   const onWheel = (e) => { e.preventDefault(); if (detailOpen || Math.abs(e.deltaY) < 8) return; changeProduct(e.deltaY > 0 ? 1 : -1) }
 
   const openDetail = () => {
@@ -77,15 +110,15 @@ function App() {
 
     requestAnimationFrame(() => {
       if (!hero || !detailRef.current || !detailInfoRef.current || !detailButtonRef.current) { lockedRef.current = false; return }
-      gsap.killTweensOf([hero, ...otherBottles, detailRef.current, detailInfoRef.current, detailButtonRef.current])
+      gsap.killTweensOf([hero, ...otherBottles, detailRef.current, detailInfoRef.current, detailButtonRef.current, titleRef.current])
       gsap.set(detailRef.current, { opacity: 1, filter: 'blur(0px)' })
-      gsap.set(detailInfoRef.current, { opacity: 0, x: -70, filter: 'blur(10px)' })
+      gsap.set(detailInfoRef.current, { opacity: 0, x: -70, filter: 'blur(10px)', rotationX: 0, rotationY: 0 })
       gsap.set(detailButtonRef.current, { opacity: 0, y: -8, x: 0, filter: 'blur(0px)' })
 
       gsap.timeline({ defaults: { ease: 'power3.inOut' }, onComplete: () => { lockedRef.current = false } })
         .to([titleRef.current, infoRef.current, counterRef.current, actionRef.current], { opacity: 0, y: -18, filter: 'blur(6px)', duration: .28, stagger: .02 }, 0)
         .to(otherBottles, { opacity: 0, scale: .72, filter: 'blur(12px)', duration: .42, stagger: .015, ease: 'power3.out' }, 0)
-        .to(hero, { x: '25vw', y: '0vh', scale: 1.32, rotation: 0, opacity: 1, filter: 'blur(0px)', zIndex: 60, duration: .9, ease: 'power4.inOut' }, .03)
+        .to(hero, { x: '25vw', y: '0vh', scale: 1.32, rotation: 0, rotationX: 0, rotationY: 0, opacity: 1, filter: 'blur(0px)', zIndex: 60, duration: .9, ease: 'power4.inOut' }, .03)
         .to(detailInfoRef.current, { opacity: 1, x: 0, filter: 'blur(0px)', duration: .72, ease: 'power3.out' }, .32)
         .to(detailButtonRef.current, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .45, ease: 'power3.out' }, .4)
     })
@@ -99,13 +132,12 @@ function App() {
     if (!hero || !detailRef.current || !detailInfoRef.current || !detailButtonRef.current) { lockedRef.current = false; return }
     gsap.killTweensOf([hero, ...otherBottles, detailRef.current, detailInfoRef.current, detailButtonRef.current, titleRef.current, infoRef.current, counterRef.current, actionRef.current])
 
-    // Restore the main-screen UI immediately. The return animation should move
-    // the bottle back into the already-visible interface, not reveal the UI afterward.
-    gsap.set(titleRef.current, { opacity: .22, y: 0, filter: 'blur(0px)', scale: 1 })
+    gsap.set(titleRef.current, { opacity: .22, y: 0, x: 0, filter: 'blur(0px)', scale: 1, rotationX: 0, rotationY: 0 })
     gsap.set(infoRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
     gsap.set(counterRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
     gsap.set(actionRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
     gsap.set(detailButtonRef.current, { opacity: 0, y: -8, x: 0, filter: 'blur(0px)' })
+    gsap.set(detailInfoRef.current, { rotationX: 0, rotationY: 0 })
 
     gsap.timeline({ defaults: { ease: 'power3.inOut' }, onComplete: () => {
       otherBottles.forEach((node) => {
@@ -115,20 +147,21 @@ function App() {
         gsap.set(node, next ? positions.next : prev ? positions.prev : positions.hiddenRight)
       })
       gsap.set(hero, positions.hero)
-      gsap.set(titleRef.current, { opacity: .22, y: 0, filter: 'blur(0px)', scale: 1 })
+      gsap.set(titleRef.current, { opacity: .22, y: 0, x: 0, filter: 'blur(0px)', scale: 1, rotationX: 0, rotationY: 0 })
       gsap.set(infoRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
       gsap.set(counterRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
       gsap.set(actionRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
       gsap.set(detailButtonRef.current, { opacity: 0, y: -8, x: 0, filter: 'blur(0px)' })
+      gsap.set(detailInfoRef.current, { rotationX: 0, rotationY: 0 })
       setDetailOpen(false)
       lockedRef.current = false
     } })
       .to([detailInfoRef.current, detailButtonRef.current], { opacity: 0, x: -30, y: -8, filter: 'blur(6px)', duration: .28, stagger: .03 }, 0)
       .to(detailRef.current, { opacity: 0, filter: 'blur(0px)', duration: .35 }, .12)
-      .to(hero, { x: '0vw', y: '0vh', scale: 1.2, opacity: 1, zIndex: 4, filter: 'blur(0px)', duration: .72, ease: 'power4.inOut' }, .2)
+      .to(hero, { x: '0vw', y: '0vh', scale: 1.2, opacity: 1, zIndex: 4, filter: 'blur(0px)', rotationX: 0, rotationY: 0, duration: .72, ease: 'power4.inOut' }, .2)
   }
 
-  return <main ref={stageRef} className={`showcase ${detailOpen ? 'is-detail' : ''}`} onPointerMove={onPointerMove} onWheel={onWheel} style={{ '--tone-1': current.tones[0], '--tone-2': current.tones[1], '--tone-3': current.tones[2], '--accent': current.accent }}>
+  return <main ref={stageRef} className={`showcase ${detailOpen ? 'is-detail' : ''}`} onPointerMove={onPointerMove} onPointerLeave={onPointerLeave} onWheel={onWheel} style={{ '--tone-1': current.tones[0], '--tone-2': current.tones[1], '--tone-3': current.tones[2], '--accent': current.accent }}>
     <div className="atmosphere" aria-hidden="true"><span className="orb orb-one" /><span className="orb orb-two" /><span className="grain" /></div>
     <header className="stage-header" style={{ opacity: 1 }}><a className="brand" href="#top">NOIR <em>DISTILLERY</em></a><span className="edition">CURATED SPIRITS / 2026</span></header>
     <section className="product-stage" aria-label="Noir Distillery bottle showcase"><div className="title-wrap" ref={titleRef} aria-hidden="true" style={{ opacity: .22 }}><p>THE PRIVATE COLLECTION</p><h1>{current.displayTitle}</h1></div>{products.map((p, i) => <img key={p.id} ref={(node) => { bottleRefs.current[i] = node }} className={`bottle bottle-${p.id}`} src={p.image} alt={p.name} draggable="false" />)}<div className="stage-caption stage-caption-left"><span>PREVIOUS</span><i /></div><div className="stage-caption stage-caption-right"><i /><span>NEXT</span></div></section>
