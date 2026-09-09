@@ -17,18 +17,15 @@ function App() {
   const [detailOpen, setDetailOpen] = useState(false)
   const activeRef = useRef(0), lockedRef = useRef(false), stageRef = useRef(null), bottleRefs = useRef([])
   const titleRef = useRef(null), infoRef = useRef(null), counterRef = useRef(null), actionRef = useRef(null)
-  const detailRef = useRef(null), detailBottleRef = useRef(null), detailInfoRef = useRef(null), detailButtonRef = useRef(null)
+  const detailRef = useRef(null), detailInfoRef = useRef(null), detailButtonRef = useRef(null)
   const current = products[active]
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // Establish the carousel geometry only. The showcase UI is intentionally
-      // visible at its final opacity from the first paint so there is no flash
-      // from opacity: 1 -> 0 -> 1 during hydration/initialisation.
+      // Only establish bottle geometry here. All visible UI opacity is owned by
+      // CSS from the first paint, so GSAP can never briefly expose a 100% title
+      // before React/GSAP initialization completes.
       bottleRefs.current.forEach((node, i) => node && gsap.set(node, i === 0 ? positions.hero : i === 1 ? positions.next : i === products.length - 1 ? positions.prev : positions.hiddenRight))
-      gsap.set(titleRef.current, { opacity: .22, y: 0, scale: 1, filter: 'blur(0px)' })
-      gsap.set([infoRef.current, counterRef.current, actionRef.current], { opacity: 1, y: 0, filter: 'blur(0px)' })
-      gsap.set(['.stage-header', '.stage-foot'], { opacity: 1, y: 0 })
     }, stageRef)
     return () => ctx.revert()
   }, [])
@@ -87,7 +84,6 @@ function App() {
       gsap.set(detailRef.current, { opacity: 1, filter: 'blur(0px)' })
       gsap.set(detailInfoRef.current, { opacity: 0, x: -70, filter: 'blur(10px)' })
       gsap.set(detailButtonRef.current, { opacity: 0, y: -8, x: 0, filter: 'blur(0px)' })
-      gsap.set(detailBottleRef.current, { opacity: 0 })
 
       gsap.timeline({ defaults: { ease: 'power3.inOut' }, onComplete: () => { lockedRef.current = false } })
         .to([titleRef.current, infoRef.current, counterRef.current, actionRef.current], { opacity: 0, y: -18, filter: 'blur(6px)', duration: .28, stagger: .02 }, 0)
@@ -138,7 +134,6 @@ function App() {
     <section className="detail-view" ref={detailRef} aria-hidden={!detailOpen} aria-label={`${current.name} details`}>
       <button className="detail-back" ref={detailButtonRef} type="button" onClick={closeDetail} aria-label="Back to bottle showcase"><span>←</span> BACK</button>
       <div className="detail-copy" ref={detailInfoRef}><p className="eyebrow">{current.category}</p><h2>{current.name}</h2><p className="detail-description">{current.detail}</p><dl><div><dt>STYLE</dt><dd>{current.style}</dd></div><div><dt>ORIGIN</dt><dd>{current.origin}</dd></div></dl></div>
-      <div className="detail-bottle-wrap" aria-hidden="true"><img className="detail-bottle" ref={detailBottleRef} src={current.image} alt="" draggable="false" /></div>
     </section>
   </main>
 }
