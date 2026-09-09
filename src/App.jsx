@@ -296,11 +296,24 @@ function App() {
     const hero = bottleRefs.current[activeRef.current]
     const otherBottles = bottleRefs.current.filter((node) => node && node !== hero)
 
-    // Establish the complete detail state before making the overlay visible.
+    gsap.killTweensOf([
+      hero,
+      ...otherBottles,
+      detailRef.current,
+      detailInfoRef.current,
+      detailButtonRef.current,
+      titleRef.current,
+      infoRef.current,
+      counterRef.current,
+      actionRef.current,
+    ])
+
+    // Establish every visible element at its hidden starting state BEFORE
+    // switching the CSS detail state. This removes the one-frame opacity flash.
     gsap.set(detailRef.current, { opacity: 0 })
     gsap.set(detailInfoRef.current, {
       opacity: 0,
-      x: -50,
+      x: -42,
       y: 0,
       filter: 'blur(8px)',
       '--parallax-x': '0px',
@@ -308,7 +321,12 @@ function App() {
       '--parallax-rx': '0deg',
       '--parallax-ry': '0deg',
     })
-    gsap.set(detailButtonRef.current, { opacity: 0, x: 0, y: -6, filter: 'blur(4px)' })
+    gsap.set(detailButtonRef.current, { opacity: 0, y: -6, filter: 'blur(4px)' })
+    gsap.set(titleRef.current, { opacity: 0, y: -12, filter: 'blur(6px)' })
+    gsap.set(infoRef.current, { opacity: 0, y: 12, filter: 'blur(6px)' })
+    gsap.set(counterRef.current, { opacity: 0, y: 12, filter: 'blur(6px)' })
+    gsap.set(actionRef.current, { opacity: 0, y: 12, filter: 'blur(6px)' })
+    gsap.set(otherBottles, { opacity: 0, filter: 'blur(12px)' })
 
     setDetailOpen(true)
 
@@ -318,33 +336,13 @@ function App() {
         return
       }
 
-      gsap.killTweensOf([
-        hero,
-        ...otherBottles,
-        detailRef.current,
-        detailInfoRef.current,
-        detailButtonRef.current,
-        titleRef.current,
-        infoRef.current,
-        counterRef.current,
-        actionRef.current,
-      ])
-
-      // No opacity-to-1 initialization. The overlay and every child start hidden.
-      gsap.set(detailRef.current, { opacity: 0 })
-      gsap.set(otherBottles, { opacity: 0, scale: 0.72, filter: 'blur(12px)' })
-      gsap.set(titleRef.current, { opacity: 0, y: -18, filter: 'blur(6px)' })
-      gsap.set(infoRef.current, { opacity: 0, y: -18, filter: 'blur(6px)' })
-      gsap.set(counterRef.current, { opacity: 0, y: -18, filter: 'blur(6px)' })
-      gsap.set(actionRef.current, { opacity: 0, y: -18, filter: 'blur(6px)' })
-
       const timeline = gsap.timeline({
         defaults: { ease: 'power3.out' },
         onComplete: () => { lockedRef.current = false },
       })
 
       timeline
-        .to(detailRef.current, { opacity: 1, duration: 0.35 }, 0)
+        .to(detailRef.current, { opacity: 1, duration: 0.32 }, 0)
         .to(hero, {
           '--base-x': '25vw',
           '--base-y': '0vh',
@@ -353,23 +351,21 @@ function App() {
           opacity: 1,
           filter: 'drop-shadow(0 28px 22px rgba(0,0,0,.36)) blur(0px)',
           zIndex: 60,
-          duration: 0.85,
+          duration: 0.82,
           ease: 'power4.inOut',
         }, 0)
         .to(detailButtonRef.current, {
           opacity: 1,
           y: 0,
           filter: 'blur(0px)',
-          duration: 0.4,
-          ease: 'power3.out',
-        }, 0.18)
+          duration: 0.34,
+        }, 0.08)
         .to(detailInfoRef.current, {
           opacity: 1,
           x: 0,
           filter: 'blur(0px)',
-          duration: 0.65,
-          ease: 'power3.out',
-        }, 0.26)
+          duration: 0.55,
+        }, 0.12)
     })
   }
 
@@ -399,14 +395,19 @@ function App() {
       actionRef.current,
     ])
 
-    // Keep the homepage hidden while the detail view leaves. This prevents the
-    // bright/full-opacity frame that previously appeared between screens.
-    gsap.set(titleRef.current, { opacity: 0, y: -18, filter: 'blur(6px)' })
-    gsap.set(infoRef.current, { opacity: 0, y: -18, filter: 'blur(6px)' })
-    gsap.set(counterRef.current, { opacity: 0, y: -18, filter: 'blur(6px)' })
-    gsap.set(actionRef.current, { opacity: 0, y: -18, filter: 'blur(6px)' })
+    // Prepare the homepage at opacity 0 first. Then remove is-detail so the
+    // homepage is allowed to participate in the same crossfade instead of
+    // producing the broken "only bottle + BACK" frame.
+    gsap.set(titleRef.current, { opacity: 0, y: -12, filter: 'blur(6px)' })
+    gsap.set(infoRef.current, { opacity: 0, y: 12, filter: 'blur(6px)' })
+    gsap.set(counterRef.current, { opacity: 0, y: 12, filter: 'blur(6px)' })
+    gsap.set(actionRef.current, { opacity: 0, y: 12, filter: 'blur(6px)' })
     gsap.set(detailButtonRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
     gsap.set(detailInfoRef.current, { opacity: 1, x: 0, filter: 'blur(0px)' })
+
+    // Release the CSS detail lock BEFORE the animation. Inline opacity:0 keeps
+    // the homepage hidden until GSAP fades it in, eliminating the blank frame.
+    setDetailOpen(false)
 
     const timeline = gsap.timeline({
       defaults: { ease: 'power3.inOut' },
@@ -420,48 +421,23 @@ function App() {
 
         setBottlePosition(hero, positions.hero)
         resetParallax(true)
-
         gsap.set(detailRef.current, { opacity: 0 })
-        gsap.set(detailInfoRef.current, { opacity: 0, x: -50, filter: 'blur(8px)' })
+        gsap.set(detailInfoRef.current, { opacity: 0, x: -42, filter: 'blur(8px)' })
         gsap.set(detailButtonRef.current, { opacity: 0, y: -6, filter: 'blur(4px)' })
-        gsap.set(titleRef.current, { opacity: 0, y: -18, filter: 'blur(6px)' })
-        gsap.set(infoRef.current, { opacity: 0, y: -18, filter: 'blur(6px)' })
-        gsap.set(counterRef.current, { opacity: 0, y: -18, filter: 'blur(6px)' })
-        gsap.set(actionRef.current, { opacity: 0, y: -18, filter: 'blur(6px)' })
-
-        setDetailOpen(false)
         lockedRef.current = false
-
-        requestAnimationFrame(() => {
-          gsap.to([infoRef.current, counterRef.current, actionRef.current], {
-            opacity: 1,
-            y: 0,
-            filter: 'blur(0px)',
-            duration: 0.42,
-            stagger: 0.035,
-            ease: 'power3.out',
-          })
-          gsap.to(titleRef.current, {
-            opacity: 0.22,
-            y: 0,
-            filter: 'blur(0px)',
-            duration: 0.45,
-            ease: 'power3.out',
-          })
-        })
       },
     })
 
     timeline
       .to([detailInfoRef.current, detailButtonRef.current], {
         opacity: 0,
-        x: -24,
+        x: -18,
         y: -6,
         filter: 'blur(5px)',
-        duration: 0.24,
-        stagger: 0.025,
+        duration: 0.22,
+        stagger: 0.02,
       }, 0)
-      .to(detailRef.current, { opacity: 0, duration: 0.35 }, 0.08)
+      .to(detailRef.current, { opacity: 0, duration: 0.42 }, 0.02)
       .to(hero, {
         '--base-x': '0vw',
         '--base-y': '0vh',
@@ -472,7 +448,22 @@ function App() {
         filter: 'drop-shadow(0 28px 22px rgba(0,0,0,.36)) blur(0px)',
         duration: 0.72,
         ease: 'power4.inOut',
-      }, 0.16)
+      }, 0.02)
+      .to([infoRef.current, counterRef.current, actionRef.current], {
+        opacity: 1,
+        y: 0,
+        filter: 'blur(0px)',
+        duration: 0.42,
+        stagger: 0.035,
+        ease: 'power3.out',
+      }, 0.22)
+      .to(titleRef.current, {
+        opacity: 0.22,
+        y: 0,
+        filter: 'blur(0px)',
+        duration: 0.42,
+        ease: 'power3.out',
+      }, 0.24)
   }
 
   return (
