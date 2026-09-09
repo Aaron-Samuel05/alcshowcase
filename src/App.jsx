@@ -22,14 +22,13 @@ function App() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
+      // Establish the carousel geometry only. The showcase UI is intentionally
+      // visible at its final opacity from the first paint so there is no flash
+      // from opacity: 1 -> 0 -> 1 during hydration/initialisation.
       bottleRefs.current.forEach((node, i) => node && gsap.set(node, i === 0 ? positions.hero : i === 1 ? positions.next : i === products.length - 1 ? positions.prev : positions.hiddenRight))
-
-      // Keep the first paint hidden so the intro never flashes fully visible before the staggered entrance.
-      gsap.set(['.stage-header', '.stage-foot'], { opacity: 0, y: 18 })
-      gsap.set(titleRef.current, { opacity: 0, y: 0, scale: .96, filter: 'blur(5px)' })
-
-      gsap.to(['.stage-header', '.stage-foot'], { opacity: 1, y: 0, stagger: .08, duration: 1.1, ease: 'power3.out' })
-      gsap.to(titleRef.current, { opacity: .22, scale: 1, filter: 'blur(0px)', duration: 1.25, ease: 'expo.out', delay: .08 })
+      gsap.set(titleRef.current, { opacity: .22, y: 0, scale: 1, filter: 'blur(0px)' })
+      gsap.set([infoRef.current, counterRef.current, actionRef.current], { opacity: 1, y: 0, filter: 'blur(0px)' })
+      gsap.set(['.stage-header', '.stage-foot'], { opacity: 1, y: 0 })
     }, stageRef)
     return () => ctx.revert()
   }, [])
@@ -87,7 +86,6 @@ function App() {
       gsap.killTweensOf([hero, ...otherBottles, detailRef.current, detailInfoRef.current, detailButtonRef.current])
       gsap.set(detailRef.current, { opacity: 1, filter: 'blur(0px)' })
       gsap.set(detailInfoRef.current, { opacity: 0, x: -70, filter: 'blur(10px)' })
-      // Always clear the previous close animation's blur before showing the back control again.
       gsap.set(detailButtonRef.current, { opacity: 0, y: -8, x: 0, filter: 'blur(0px)' })
       gsap.set(detailBottleRef.current, { opacity: 0 })
 
