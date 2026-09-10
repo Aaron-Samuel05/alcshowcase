@@ -1,4 +1,4 @@
-/* Detail mode: the selected bottle belongs ONLY to the hero viewport. */
+/* Editorial 50/50 hero grid: copy centered in the left half, bottle centered in the right half. */
 .showcase.is-detail .product-stage {
   transform: none !important;
   z-index: 70 !important;
@@ -13,27 +13,46 @@
 
 .showcase.is-detail .bottle[data-bottle-active="true"] {
   position: absolute !important;
-  left: 50% !important;
+  left: 75% !important;
   top: 50% !important;
   z-index: 90 !important;
+  opacity: 1 !important;
   visibility: visible !important;
   pointer-events: none !important;
   filter: drop-shadow(0 28px 22px rgba(0,0,0,.36)) !important;
-  will-change: transform, opacity;
-  transition: opacity .45s ease, visibility .45s ease;
+  will-change: transform;
 }
 
-.showcase.is-detail.detail-archive-active .bottle[data-bottle-active="true"] {
-  opacity: 0 !important;
-  visibility: hidden !important;
+/* The detail copy occupies exactly the left half and is vertically centered. */
+.showcase.is-detail .detail-copy {
+  left: 0 !important;
+  top: 50% !important;
+  width: 50vw !important;
+  max-width: none !important;
+  padding: 0 clamp(2rem, 5vw, 5.5rem) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
 }
 
-.showcase.is-detail .detail-view {
-  z-index: 50;
+.showcase.is-detail .detail-copy > * {
+  width: min(100%, 38rem);
 }
 
-.showcase.is-detail .detail-scroll-content,
-.showcase.is-detail .detail-scroll-section {
-  position: relative;
-  z-index: 1;
+.showcase.is-detail .detail-copy h2 { max-width: 38rem; }
+.showcase.is-detail .detail-description,
+.showcase.is-detail .detail-copy dl { max-width: 31rem; }
+
+@media (max-width: 800px) {
+  .showcase.is-detail .bottle[data-bottle-active="true"] {
+    left: 50% !important;
+    top: 34% !important;
+  }
+  .showcase.is-detail .detail-copy {
+    left: 0 !important;
+    top: auto !important;
+    bottom: 5rem !important;
+    width: 100% !important;
+    padding: 0 1.5rem !important;
+  }
 }
