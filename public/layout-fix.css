@@ -11,3 +11,9 @@
     rotateX(var(--parallax-rx))
     rotateY(var(--parallax-ry)) !important;
 }
+
+/* The bottle itself is an alternate trigger for the same Explore action. */
+.bottle {
+  pointer-events: auto !important;
+  cursor: pointer;
+}
