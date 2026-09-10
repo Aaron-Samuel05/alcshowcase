@@ -7,8 +7,8 @@
       craft: 'A contemporary spirit framed by an older city — where the past and present meet in one unmistakably New York identity.',
       images: [
         { url: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/GezichtOpNieuwAmsterdam.jpg', alt: 'New Amsterdam in 1664, archival view', label: 'NEW AMSTERDAM / 1664' },
-        { url: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/AMH-6740-NA_View_of_New_Amsterdam.jpg', alt: 'Archival view of New Amsterdam', label: 'ARCHIVE / NEW AMSTERDAM' },
-        { url: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/GezichtOpNieuwAmsterdam.jpg', alt: 'Historical New Amsterdam skyline', label: 'NEW YORK / ORIGINS' }
+        { url: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Plan_of_New_York_or_New_Amsterdam_%28as_in_Sept_1661%29%2C_1664_-_BL.jpg', alt: 'Plan of New Amsterdam from 1664', label: 'NEW AMSTERDAM / CITY PLAN' },
+        { url: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Fort_New_Amsterdam_on_the_Manhatans_%28New_York%29_print_c1626.jpg', alt: 'Early view of Fort New Amsterdam on Manhattan', label: 'FORT AMSTERDAM / C.1626' }
       ]
     },
     'Captain Morgan': {
@@ -17,9 +17,9 @@
       history: 'This story begins with the man behind the name and the Caribbean world in which he lived — old maps, portraits, ports and the island of Jamaica.',
       craft: 'Warm spice, caramel and dark rum character are presented through a visual language rooted in Caribbean history rather than modern cocktail photography.',
       images: [
-        { url: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Sir_Henry_Morgan_%281635-1688%29_%28imp-cswc-GB-237-CSWC47-LS11-008%29.jpg', alt: 'Archival portrait of Sir Henry Morgan', label: 'SIR HENRY MORGAN / ARCHIVE' },
-        { url: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Sir_Henry_Morgan_%281635-1688%29_%28imp-cswc-GB-237-CSWC47-LS11-008%29.jpg', alt: 'Historical portrait associated with Captain Morgan', label: 'CARIBBEAN / 17TH CENTURY' },
-        { url: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Sir_Henry_Morgan_%281635-1688%29_%28imp-cswc-GB-237-CSWC47-LS11-008%29.jpg', alt: 'Sir Henry Morgan archival portrait', label: 'THE MAN BEHIND THE NAME' }
+        { url: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Admiral_Sir_Henry_Morgan_%281635%E2%80%931688%29%2C_Lieutenant_Governor_of_Jamaica.jpg', alt: 'Portrait of Sir Henry Morgan, Lieutenant Governor of Jamaica', label: 'SIR HENRY MORGAN / PORTRAIT' },
+        { url: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Port_Royal%2C_Jamaica%2C_in_the_17th_century%2C_before_the_devastating_earthquake_in_1692.jpg', alt: 'Port Royal Jamaica in the seventeenth century', label: 'PORT ROYAL / 17TH CENTURY' },
+        { url: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/View_of_Port_Royal_and_Kingston_Harbour_in_the_Island_ofJamaica_%28NYPL_Hades-287497-EM3961%29.jpg', alt: 'Historical view of Port Royal and Kingston Harbour', label: 'JAMAICA / PORT ROYAL' }
       ]
     },
     'Hendrick’s': {
@@ -28,9 +28,9 @@
       history: 'Its production story is tied to Girvan, Scotland, and to the rare Bennett still dating from 1860 and Carter-Head still dating from 1948 that helped define the spirit’s unusual character.',
       craft: 'Old copper, small-batch distillation and an eccentric botanical recipe form the bridge between Victorian distilling equipment and a modern Scottish gin.',
       images: [
-        { url: 'https://www.livetsgoda.se/uploads/2019/01/The%20Girvan%20Patent%20Still%20Distillery%20Welcome%20Sign_original.jpg', alt: 'Girvan Distillery entrance in monochrome', label: 'GIRVAN / SCOTLAND' },
+        { url: 'https://www.livetsgoda.se/uploads/2019/01/The%20Girvan%20Patent%20Still%20Distillery%20Welcome%20Sign_original.jpg', alt: 'Girvan distillery in Scotland', label: 'GIRVAN / SCOTLAND' },
         { url: 'https://images.ctfassets.net/a2epoeqa068n/I0nSS3eh9ZxXRRmMYmrJT/6c2c223f61ab0a2611561a6ede43be79/DSC_5261_Large.jpeg', alt: 'The historic Bennett still from 1860', label: 'BENNETT STILL / 1860' },
-        { url: 'https://www.livetsgoda.se/uploads/2019/01/The%20Girvan%20Patent%20Still%20Distillery%20Welcome%20Sign_original.jpg', alt: 'Girvan Scotland archival-style image', label: 'SCOTLAND / DISTILLING' }
+        { url: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Girvan%2C_Scotland%2C_1890s.jpg', alt: 'Girvan Scotland in the 1890s', label: 'GIRVAN / 1890s' }
       ]
     },
     'Appleton Estate V/X': {
@@ -41,7 +41,7 @@
       images: [
         { url: 'https://substackcdn.com/image/fetch/$s_%21VnoO%21%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F8affe6e5-9145-4087-8345-334e52912e38_1200x955.jpeg', alt: 'Appleton Estate distillery operations in 1950', label: 'APPLETON ESTATE / 1950' },
         { url: 'https://www.lavanguardia.com/files/og_thumbnail/uploads/2021/08/03/61098397068df.jpeg', alt: 'Historical Jamaican sugar cane workers', label: 'JAMAICA / SUGAR CANE' },
-        { url: 'https://substackcdn.com/image/fetch/$s_%21VnoO%21%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F8affe6e5-9145-4087-8345-334e52912e38_1200x955.jpeg', alt: 'Archival Appleton Estate distillery', label: 'NASSAU VALLEY / RUM MAKING' }
+        { url: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Appleton_Estate_Jamaica_November_2012.jpg', alt: 'Appleton Estate rum factory in Jamaica', label: 'APPLETON FACTORY / JAMAICA' }
       ]
     }
   }
@@ -53,65 +53,28 @@
     if (!view) return
     let content = view.querySelector('.detail-scroll-content')
     if (!content) { content = document.createElement('div'); content.className = 'detail-scroll-content'; view.appendChild(content) }
-
     const name = view.querySelector('.detail-copy h2')?.textContent?.trim() || 'Selected Bottle'
     const category = view.querySelector('.detail-copy .eyebrow')?.textContent?.trim() || ''
     const facts = [...view.querySelectorAll('.detail-copy dl dd')].map((el) => el.textContent.trim())
-    const story = histories[name] || {
-      title: `The character of ${name}.`, story: `A carefully composed ${category.toLowerCase()} selected for its distinctive character, balance and place within the collection.`,
-      history: 'Its story is rooted in the traditions, ingredients and craft that define its category.', craft: 'Its production character is part of what gives this expression its place within the collection.',
-      images: [{ url: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=1800&q=85', alt: 'Atmospheric spirits still life', label: 'THE COLLECTION' }]
-    }
+    const story = histories[name] || { title: `The character of ${name}.`, story: `A carefully composed ${category.toLowerCase()} selected for its distinctive character, balance and place within the collection.`, history: 'Its story is rooted in the traditions, ingredients and craft that define its category.', craft: 'Its production character is part of what gives this expression its place within the collection.', images: [{ url: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=1800&q=85', alt: 'Atmospheric spirits still life', label: 'THE COLLECTION' }] }
     const image = (index) => story.images[index % story.images.length]
     const a = image(0), b = image(1), c = image(2)
-
     content.innerHTML = `
       <div class="detail-scroll-spacer"></div>
       <section class="detail-scroll-section detail-scroll-story-section">
         <div class="detail-scroll-inner detail-scroll-story-layout">
-          <div class="detail-scroll-story-copy">
-            <p class="detail-scroll-kicker">01 / THE STORY</p>
-            <h3 class="detail-scroll-title">${story.title}</h3>
-            <p class="detail-scroll-copy">${story.story}</p>
-            <div class="detail-scroll-origin"><span>ORIGIN</span><strong>${facts[1] || 'SELECTED ORIGIN'}</strong></div>
-          </div>
-          <figure class="detail-scroll-visual detail-scroll-visual-story">
-            <img src="${a.url}" alt="${a.alt}" loading="lazy" />
-            <figcaption><span>${a.label}</span><i></i></figcaption>
-          </figure>
+          <div class="detail-scroll-story-copy"><p class="detail-scroll-kicker">01 / THE STORY</p><h3 class="detail-scroll-title">${story.title}</h3><p class="detail-scroll-copy">${story.story}</p><div class="detail-scroll-origin"><span>ORIGIN</span><strong>${facts[1] || 'SELECTED ORIGIN'}</strong></div></div>
+          <figure class="detail-scroll-visual detail-scroll-visual-story"><img src="${a.url}" alt="${a.alt}" loading="lazy" /><figcaption><span>${a.label}</span><i></i></figcaption></figure>
         </div>
       </section>
       <section class="detail-scroll-section detail-scroll-heritage-section">
         <div class="detail-scroll-inner detail-scroll-heritage-layout">
-          <figure class="detail-scroll-visual detail-scroll-visual-heritage">
-            <img src="${b.url}" alt="${b.alt}" loading="lazy" />
-            <figcaption><span>${b.label}</span><i></i></figcaption>
-          </figure>
-          <div class="detail-scroll-story-copy detail-scroll-heritage-copy">
-            <p class="detail-scroll-kicker">02 / HERITAGE</p>
-            <h3>Where the story begins.</h3>
-            <p class="detail-scroll-lead">${story.history}</p>
-            <p>${story.craft}</p>
-            <div class="detail-scroll-callout"><span>ARCHIVE</span><strong>${b.label}</strong></div>
-          </div>
+          <figure class="detail-scroll-visual detail-scroll-visual-heritage"><img src="${b.url}" alt="${b.alt}" loading="lazy" /><figcaption><span>${b.label}</span><i></i></figcaption></figure>
+          <div class="detail-scroll-story-copy detail-scroll-heritage-copy"><p class="detail-scroll-kicker">02 / HERITAGE</p><h3>Where the story begins.</h3><p class="detail-scroll-lead">${story.history}</p><p>${story.craft}</p><div class="detail-scroll-callout"><span>ARCHIVE</span><strong>${b.label}</strong></div></div>
         </div>
       </section>
-      <section class="detail-scroll-section detail-scroll-character-section">
-        <div class="detail-scroll-character-image" style="background-image:url('${c.url}')"></div>
-        <div class="detail-scroll-character-overlay"></div>
-        <div class="detail-scroll-inner detail-scroll-character-content">
-          <p class="detail-scroll-kicker">03 / CHARACTER</p>
-          <div class="detail-scroll-character-row">
-            <h3>${name}</h3>
-            <div><span>STYLE</span><strong>${facts[0] || 'SIGNATURE STYLE'}</strong><span>ORIGIN</span><strong>${facts[1] || 'SELECTED ORIGIN'}</strong><span>CATEGORY</span><strong>${category}</strong></div>
-          </div>
-        </div>
-      </section>
-      <section class="detail-scroll-section detail-scroll-end">
-        <div><p>END OF EDITION</p><h3>${name}</h3><div class="detail-scroll-end-meta"><span>${category}</span><span>${facts[1] || 'SELECTED ORIGIN'}</span><span>${facts[0] || 'SIGNATURE STYLE'}</span></div></div>
-      </section>
-    `
-
+      <section class="detail-scroll-section detail-scroll-character-section"><div class="detail-scroll-character-image" style="background-image:url('${c.url}')"></div><div class="detail-scroll-character-overlay"></div><div class="detail-scroll-inner detail-scroll-character-content"><p class="detail-scroll-kicker">03 / CHARACTER</p><div class="detail-scroll-character-row"><h3>${name}</h3><div><span>STYLE</span><strong>${facts[0] || 'SIGNATURE STYLE'}</strong><span>ORIGIN</span><strong>${facts[1] || 'SELECTED ORIGIN'}</strong><span>CATEGORY</span><strong>${category}</strong></div></div></div></section>
+      <section class="detail-scroll-section detail-scroll-end"><div><p>END OF EDITION</p><h3>${name}</h3><div class="detail-scroll-end-meta"><span>${category}</span><span>${facts[1] || 'SELECTED ORIGIN'}</span><span>${facts[0] || 'SIGNATURE STYLE'}</span></div></div></section>`
     if (!view.querySelector('.detail-scroll-hint')) { const hint = document.createElement('div'); hint.className = 'detail-scroll-hint'; hint.innerHTML = 'SCROLL TO DISCOVER<span>↓</span>'; view.appendChild(hint) }
   }
 
@@ -122,8 +85,7 @@
     if (!view.dataset.heroShift) captureHeroGeometry(view)
     const progress = clamp01(view.scrollTop / Math.max(1, window.innerHeight * 0.82)), eased = smoothstep(progress), heroShift = Number.parseFloat(view.dataset.heroShift || '0')
     copy.style.setProperty('--scroll-x', `${heroShift * eased}px`); copy.style.setProperty('--scroll-y', `${-8 * eased}px`); copy.style.setProperty('--scroll-scale', `${1 - eased * 0.035}`)
-    const bottleProgress = smoothstep(progress / 0.9), bottleOpacity = 1 - bottleProgress
-    document.querySelectorAll('.showcase.is-detail .bottle').forEach((bottle) => { if (Number.parseInt(getComputedStyle(bottle).zIndex || '0', 10) >= 50) { bottle.style.opacity = String(bottleOpacity); bottle.style.filter = `drop-shadow(0 28px 22px rgba(0,0,0,.36)) blur(${bottleProgress * 4}px)` } })
+    document.querySelectorAll('.showcase.is-detail .bottle').forEach((bottle) => { bottle.style.opacity = '1'; bottle.style.filter = 'drop-shadow(0 28px 22px rgba(0,0,0,.36))' })
     copy.style.opacity = String(1 - smoothstep((progress - 0.72) / 0.28) * 0.9); showcase.classList.toggle('detail-scrolled', progress > 0.04)
     const scrollRatio = clamp01(view.scrollTop / Math.max(1, view.scrollHeight - window.innerHeight))
     view.querySelectorAll('.detail-scroll-visual img').forEach((img, index) => { const local = smoothstep(clamp01((scrollRatio * 4.5) - index * 0.55)); img.style.transform = `scale(${1.08 - local * 0.035}) translate3d(0, ${12 - local * 12}%, 0)` })
