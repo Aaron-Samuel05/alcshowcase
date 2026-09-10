@@ -31,3 +31,17 @@
 .showcase.is-detail .bottle {
   margin-left: 0 !important;
 }
+
+/* PATCH: keep the hero bottle's home-state visual center stable after a
+   browser Back/forward restore or a detail-view close. The detail view uses
+   its own explicit positioning, so this only affects the normal showcase. */
+.showcase:not(.is-detail) .bottle {
+  transform-origin: 50% 54% !important;
+}
+
+.showcase:not(.is-detail) .bottle-1,
+.showcase:not(.is-detail) .bottle-2,
+.showcase:not(.is-detail) .bottle-3,
+.showcase:not(.is-detail) .bottle-4 {
+  left: 50% !important;
+}
