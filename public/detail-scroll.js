@@ -79,17 +79,29 @@
     }
   }
 
+  function setScrolledState(view) {
+    const showcase = document.querySelector('.showcase')
+    if (!showcase) return
+    showcase.classList.toggle('detail-scrolled', view.scrollTop > 80)
+  }
+
   function resetScroll(view) {
     view.scrollTop = 0
-    requestAnimationFrame(() => { view.scrollTop = 0 })
+    const showcase = document.querySelector('.showcase')
+    showcase?.classList.remove('detail-scrolled')
+    requestAnimationFrame(() => {
+      view.scrollTop = 0
+      showcase?.classList.remove('detail-scrolled')
+    })
   }
 
   function init(view) {
     if (!view || view.dataset.scrollReady === 'true') return
     view.dataset.scrollReady = 'true'
 
-    // Let the detail page consume wheel events instead of the showcase carousel.
+    // The detail page owns the wheel interaction while it is open.
     view.addEventListener('wheel', (event) => event.stopPropagation(), { passive: true })
+    view.addEventListener('scroll', () => setScrolledState(view), { passive: true })
 
     const observer = new MutationObserver(() => {
       const isOpen = view.getAttribute('aria-hidden') === 'false'
