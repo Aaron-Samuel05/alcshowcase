@@ -20,6 +20,26 @@
         const explore = document.querySelector('.explore')
         if (explore) explore.click()
       })
+
+      // Mark only the actual hero bottle as the detail-view bottle.
+      // The hero is always the bottle with the largest base scale when detail opens.
+      const syncDetailBottle = () => {
+        const showcase = document.querySelector('.showcase')
+        const bottles = [...document.querySelectorAll('.showcase .bottle')]
+        if (!showcase || !bottles.length) return
+        const isDetail = showcase.classList.contains('is-detail')
+        bottles.forEach((bottle) => bottle.removeAttribute('data-bottle-active'))
+        if (!isDetail) return
+        let hero = null
+        let largest = -Infinity
+        bottles.forEach((bottle) => {
+          const scale = parseFloat(getComputedStyle(bottle).getPropertyValue('--base-scale')) || 0
+          if (scale > largest) { largest = scale; hero = bottle }
+        })
+        hero?.setAttribute('data-bottle-active', 'true')
+      }
+      new MutationObserver(syncDetailBottle).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] })
+      requestAnimationFrame(syncDetailBottle)
     </script>
     <script src="/detail-scroll.js"></script>
   </body>
