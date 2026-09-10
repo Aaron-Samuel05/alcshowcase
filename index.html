@@ -45,6 +45,15 @@
         if (showcase) showcase.classList.add('detail-closing')
       }, true)
 
+      // The detail-back button is rendered by React but the button itself has no
+      // React click handler. Forward its click to the existing Escape-key path,
+      // which calls the existing closeDetail() logic without changing the UI.
+      document.addEventListener('click', (event) => {
+        const back = event.target.closest('.detail-back')
+        if (!back) return
+        window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+      })
+
       new MutationObserver(syncDetailBottle).observe(document.body, {
         childList: true,
         subtree: true,
