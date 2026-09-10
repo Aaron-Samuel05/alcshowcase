@@ -1,4 +1,4 @@
-/* Detail hero: strict 50/50 composition. The hero is a fixed visual during the opening scene, then fades away before the archive. */
+/* Detail hero: strict 50/50 composition. The hero is fixed only while the detail opening scene is active. */
 .showcase.is-detail .product-stage {
   position: absolute !important;
   inset: 0 !important;
@@ -14,8 +14,6 @@
   pointer-events: none !important;
 }
 
-/* Important: cancel the carousel's --base-x translation here. The old 25vw
-   carousel offset was being added on top of left:75vw, pushing the bottle off-screen. */
 .showcase.is-detail .bottle[data-bottle-active="true"] {
   position: fixed !important;
   left: 75vw !important;
@@ -31,7 +29,24 @@
   transform-origin: center center !important;
 }
 
-/* Exact left-half center: copy center = 25vw. */
+/* During Back, leave fixed positioning BEFORE React closes detail. This lets GSAP
+   animate the bottle's normal carousel variables smoothly instead of jumping from
+   a fixed viewport position to the carousel transform. */
+.showcase.is-detail.detail-closing .bottle[data-bottle-active="true"] {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  z-index: 90 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translate3d(calc(-50% + var(--base-x, 0vw) + var(--parallax-x, 0px)), calc(-50% + var(--base-y, 0vh) + var(--parallax-y, 0px)), 0) rotate(var(--base-rotation, 0deg)) scale(var(--base-scale, 1.2)) !important;
+}
+
+.showcase.is-detail.detail-closing .bottle:not([data-bottle-active="true"]) {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
 .showcase.is-detail .detail-copy {
   left: 25vw !important;
   top: 50vh !important;
@@ -47,7 +62,6 @@
 .showcase.is-detail .detail-description { max-width: 34rem; }
 .showcase.is-detail .detail-copy dl { max-width: 100%; }
 
-/* Hard stop: the archive can never render the hero bottle. */
 .showcase.is-detail.detail-archive-active .bottle[data-bottle-active="true"] {
   opacity: 0 !important;
   visibility: hidden !important;
