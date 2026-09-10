@@ -85,26 +85,31 @@
     }
   }
 
+  function captureHeroGeometry(view) {
+    const copy = view.querySelector('.detail-copy')
+    if (!copy) return
+    const rect = copy.getBoundingClientRect()
+    view.dataset.heroShift = String((window.innerWidth / 2) - (rect.left + rect.width / 2))
+  }
+
   function updateHeroScroll(view) {
     const showcase = document.querySelector('.showcase')
     const copy = view.querySelector('.detail-copy')
     if (!showcase || !copy) return
 
-    const progress = clamp01(view.scrollTop / Math.max(1, window.innerHeight * 0.92))
+    if (!view.dataset.heroShift) captureHeroGeometry(view)
+
+    // The first ~0.8 viewport is one continuous cinematic handoff:
+    // bottle exits while the original left-aligned copy travels to true center.
+    const progress = clamp01(view.scrollTop / Math.max(1, window.innerHeight * 0.82))
     const eased = smoothstep(progress)
+    const heroShift = Number.parseFloat(view.dataset.heroShift || '0')
 
-    // Calculate the exact horizontal distance from the copy's current left anchor
-    // to the viewport center, so every screen size lands on true visual center.
-    const copyRect = copy.getBoundingClientRect()
-    const targetX = (window.innerWidth / 2) - (copyRect.left + copyRect.width / 2)
-
-    copy.style.setProperty('--scroll-x', `${targetX * eased}px`)
+    copy.style.setProperty('--scroll-x', `${heroShift * eased}px`)
     copy.style.setProperty('--scroll-y', `${-8 * eased}px`)
     copy.style.setProperty('--scroll-scale', `${1 - eased * 0.035}`)
 
-    // The bottle exits slightly faster than the copy arrives, giving the impression
-    // that the typography is taking over the composition rather than jumping into it.
-    const bottleProgress = smoothstep(progress / 0.78)
+    const bottleProgress = smoothstep(progress / 0.9)
     const bottleOpacity = 1 - bottleProgress
     const bottles = document.querySelectorAll('.showcase.is-detail .bottle')
     bottles.forEach((bottle) => {
@@ -115,9 +120,10 @@
       }
     })
 
-    // Once the hero handoff is complete, let the story take visual priority.
+    // Keep the hero copy visible while it reaches center, then dissolve it
+    // gently as the dedicated Story section takes over.
     const copyFade = smoothstep((progress - 0.72) / 0.28)
-    copy.style.opacity = String(1 - copyFade * 0.88)
+    copy.style.opacity = String(1 - copyFade * 0.9)
 
     showcase.classList.toggle('detail-scrolled', progress > 0.04)
   }
@@ -133,12 +139,14 @@
       copy.style.setProperty('--scroll-scale', '1')
       copy.style.opacity = ''
     }
+    delete view.dataset.heroShift
     document.querySelectorAll('.showcase .bottle').forEach((bottle) => {
       bottle.style.opacity = ''
       bottle.style.filter = ''
     })
     requestAnimationFrame(() => {
       view.scrollTop = 0
+      captureHeroGeometry(view)
       showcase?.classList.remove('detail-scrolled')
       updateHeroScroll(view)
     })
@@ -151,7 +159,10 @@
     view.addEventListener('wheel', (event) => event.stopPropagation(), { passive: true })
     view.addEventListener('scroll', () => updateHeroScroll(view), { passive: true })
     window.addEventListener('resize', () => {
-      if (view.getAttribute('aria-hidden') === 'false') updateHeroScroll(view)
+      if (view.getAttribute('aria-hidden') === 'false') {
+        captureHeroGeometry(view)
+        updateHeroScroll(view)
+      }
     }, { passive: true })
 
     const observer = new MutationObserver(() => {
