@@ -1,0 +1,160 @@
+.detail-view {
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  height: 100svh;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+}
+
+.detail-view::-webkit-scrollbar { display: none; }
+
+.detail-scroll-content {
+  position: relative;
+  min-height: 300svh;
+  padding-top: 100svh;
+}
+
+.detail-scroll-spacer {
+  height: 0;
+}
+
+.detail-scroll-section {
+  position: relative;
+  min-height: 100svh;
+  padding: clamp(5rem, 10vw, 9rem) clamp(1.5rem, 8vw, 9rem);
+  display: grid;
+  align-content: center;
+  background:
+    linear-gradient(180deg, rgba(5,7,12,.05), rgba(5,7,12,.94) 14%, rgba(5,7,12,.98));
+  border-top: 1px solid rgba(255,255,255,.1);
+}
+
+.detail-scroll-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 55% 65% at 75% 45%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%);
+}
+
+.detail-scroll-inner {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 1100px);
+  margin: 0 auto;
+}
+
+.detail-scroll-kicker {
+  margin: 0 0 1rem;
+  font: .62rem 'DM Mono', monospace;
+  letter-spacing: .22em;
+  color: var(--accent);
+}
+
+.detail-scroll-title {
+  margin: 0;
+  max-width: 900px;
+  font: 500 clamp(3.5rem, 8vw, 8rem)/.82 'Cormorant Garamond', Georgia, serif;
+  letter-spacing: -.065em;
+}
+
+.detail-scroll-copy {
+  max-width: 720px;
+  margin: 2rem 0 0;
+  font: 500 clamp(1.1rem, 1.7vw, 1.55rem)/1.45 'Cormorant Garamond', Georgia, serif;
+  opacity: .78;
+}
+
+.detail-scroll-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: clamp(3rem, 7vw, 6rem);
+  border-top: 1px solid rgba(255,255,255,.16);
+  border-bottom: 1px solid rgba(255,255,255,.16);
+}
+
+.detail-scroll-fact {
+  padding: 1.4rem 1rem 1.5rem 0;
+  border-right: 1px solid rgba(255,255,255,.12);
+}
+.detail-scroll-fact:last-child { border-right: 0; padding-left: 1rem; }
+.detail-scroll-fact:nth-child(2) { padding-left: 1rem; }
+.detail-scroll-fact span {
+  display: block;
+  margin-bottom: .55rem;
+  font: .56rem 'DM Mono', monospace;
+  letter-spacing: .16em;
+  opacity: .48;
+}
+.detail-scroll-fact strong {
+  font: 500 1.15rem 'Cormorant Garamond', Georgia, serif;
+}
+
+.detail-scroll-story {
+  display: grid;
+  grid-template-columns: .7fr 1.3fr;
+  gap: clamp(2.5rem, 9vw, 9rem);
+  align-items: start;
+}
+.detail-scroll-story h3 {
+  margin: 0;
+  font: 500 clamp(2.5rem, 5vw, 5rem)/.9 'Cormorant Garamond', Georgia, serif;
+  letter-spacing: -.05em;
+}
+.detail-scroll-story p {
+  margin: 0 0 1.4rem;
+  font: 500 clamp(1.05rem, 1.5vw, 1.35rem)/1.55 'Cormorant Garamond', Georgia, serif;
+  opacity: .76;
+}
+
+.detail-scroll-end {
+  min-height: 55svh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  background: rgba(3,5,9,.98);
+}
+.detail-scroll-end p {
+  margin: 0 0 .9rem;
+  font: .58rem 'DM Mono', monospace;
+  letter-spacing: .22em;
+  color: var(--accent);
+}
+.detail-scroll-end h3 {
+  margin: 0;
+  font: 500 clamp(2.8rem, 6vw, 6rem)/.85 'Cormorant Garamond', Georgia, serif;
+  letter-spacing: -.06em;
+}
+
+.detail-scroll-hint {
+  position: absolute;
+  z-index: 80;
+  left: 50%;
+  bottom: 2rem;
+  transform: translateX(-50%);
+  font: .58rem 'DM Mono', monospace;
+  letter-spacing: .2em;
+  opacity: .55;
+  animation: detailScrollHint 1.8s ease-in-out infinite;
+  pointer-events: none;
+}
+.detail-scroll-hint span { display: block; text-align: center; margin-top: .45rem; font-size: 1rem; }
+
+@keyframes detailScrollHint {
+  0%, 100% { opacity: .35; transform: translate(-50%, 0); }
+  50% { opacity: .8; transform: translate(-50%, 5px); }
+}
+
+@media (max-width: 800px) {
+  .detail-scroll-section { padding: 5rem 1.5rem; }
+  .detail-scroll-grid { grid-template-columns: 1fr; }
+  .detail-scroll-fact,
+  .detail-scroll-fact:nth-child(2),
+  .detail-scroll-fact:last-child { padding: 1.2rem 0; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.12); }
+  .detail-scroll-fact:last-child { border-bottom: 0; }
+  .detail-scroll-story { grid-template-columns: 1fr; gap: 2rem; }
+  .detail-scroll-content { min-height: 330svh; }
+}
