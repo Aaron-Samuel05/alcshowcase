@@ -1,8 +1,11 @@
-/* Editorial 50/50 hero grid: copy centered in the left half, bottle centered in the right half. */
+/* Detail hero = strict 50/50 editorial composition. The hero is viewport-fixed, then fades away with the copy as the archive begins. */
 .showcase.is-detail .product-stage {
+  position: absolute !important;
+  inset: 0 !important;
   transform: none !important;
   z-index: 70 !important;
-  pointer-events: none;
+  pointer-events: none !important;
+  overflow: visible !important;
 }
 
 .showcase.is-detail .bottle:not([data-bottle-active="true"]) {
@@ -12,47 +15,45 @@
 }
 
 .showcase.is-detail .bottle[data-bottle-active="true"] {
-  position: absolute !important;
-  left: 75% !important;
-  top: 50% !important;
+  position: fixed !important;
+  left: 75vw !important;
+  top: 50vh !important;
   z-index: 90 !important;
-  opacity: 1 !important;
   visibility: visible !important;
   pointer-events: none !important;
+  will-change: transform, opacity;
   filter: drop-shadow(0 28px 22px rgba(0,0,0,.36)) !important;
-  will-change: transform;
+  transition: none !important;
 }
 
-/* The detail copy occupies exactly the left half and is vertically centered. */
+/* Exact left-half center: the copy's visual center sits at 25vw. */
 .showcase.is-detail .detail-copy {
-  left: 0 !important;
-  top: 50% !important;
-  width: 50vw !important;
+  left: 25vw !important;
+  top: 50vh !important;
+  width: min(42vw, 620px) !important;
   max-width: none !important;
-  padding: 0 clamp(2rem, 5vw, 5.5rem) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
+  padding: 0 !important;
+  transform: translate3d(calc(-50% + var(--parallax-x) + var(--scroll-x)), calc(-50% + var(--parallax-y) + var(--scroll-y)), 0) rotateX(var(--parallax-rx)) rotateY(var(--parallax-ry)) scale(var(--scroll-scale)) !important;
+  transform-origin: center center !important;
 }
 
 .showcase.is-detail .detail-copy > * {
-  width: min(100%, 38rem);
+  width: 100%;
+  max-width: 100%;
 }
 
-.showcase.is-detail .detail-copy h2 { max-width: 38rem; }
-.showcase.is-detail .detail-description,
-.showcase.is-detail .detail-copy dl { max-width: 31rem; }
+.showcase.is-detail .detail-copy h2 { max-width: 100%; }
+.showcase.is-detail .detail-description { max-width: 34rem; }
+.showcase.is-detail .detail-copy dl { max-width: 100%; }
 
 @media (max-width: 800px) {
   .showcase.is-detail .bottle[data-bottle-active="true"] {
-    left: 50% !important;
-    top: 34% !important;
+    left: 50vw !important;
+    top: 31vh !important;
   }
   .showcase.is-detail .detail-copy {
-    left: 0 !important;
-    top: auto !important;
-    bottom: 5rem !important;
-    width: 100% !important;
-    padding: 0 1.5rem !important;
+    left: 50vw !important;
+    top: 72vh !important;
+    width: calc(100vw - 3rem) !important;
   }
 }
