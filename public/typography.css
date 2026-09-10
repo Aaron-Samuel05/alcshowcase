@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap');
+
+/* Premium editorial typography system */
+.title-wrap h1,
+.product-info h2,
+.description,
+.detail-copy h2,
+.detail-description {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+}
+
+.title-wrap h1 {
+  font-weight: 500;
+  letter-spacing: -.065em;
+  line-height: .72;
+}
+
+.product-info h2 {
+  font-weight: 500;
+  letter-spacing: -.035em;
+  line-height: .95;
+}
+
+.description {
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -.01em;
+}
+
+.detail-copy h2 {
+  font-weight: 500;
+  letter-spacing: -.065em;
+  line-height: .76;
+}
+
+.detail-description {
+  font-weight: 500;
+  line-height: 1.38;
+  letter-spacing: -.005em;
+}
+
+.brand em {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-weight: 600;
+  letter-spacing: .02em;
+}
