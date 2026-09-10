@@ -1,4 +1,4 @@
-/* Detail hero: strict 50/50 composition. The hero is fixed only while the detail opening scene is active. */
+/* Detail hero: strict 50/50 composition. */
 .showcase.is-detail .product-stage {
   position: absolute !important;
   inset: 0 !important;
@@ -14,10 +14,13 @@
   pointer-events: none !important;
 }
 
+/* Keep the hero in the SAME positioning system as the carousel while opening.
+   This is important: switching absolute -> fixed on .is-detail caused a visible
+   one-frame teleport before GSAP could animate --base-x from 0vw to 17vw. */
 .showcase.is-detail .bottle[data-bottle-active="true"] {
-  position: fixed !important;
-  left: 75vw !important;
-  top: 50vh !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
   z-index: 90 !important;
   visibility: visible !important;
   pointer-events: none !important;
@@ -25,13 +28,19 @@
   filter: drop-shadow(0 28px 22px rgba(0,0,0,.36)) !important;
   transition: none !important;
   opacity: var(--detail-hero-opacity, 1) !important;
-  transform: translate3d(calc(-50% + var(--parallax-x, 0px)), calc(-50% + var(--parallax-y, 0px)), 0) rotateX(var(--parallax-rx, 0deg)) rotateY(var(--parallax-ry, 0deg)) scale(1.18) !important;
+  transform: translate3d(
+    calc(-50% + var(--base-x, 0vw) + var(--parallax-x, 0px)),
+    calc(-50% + var(--base-y, 0vh) + var(--parallax-y, 0px)),
+    0
+  ) rotate(var(--base-rotation, 0deg))
+    rotateX(var(--parallax-rx, 0deg))
+    rotateY(var(--parallax-ry, 0deg))
+    scale(var(--base-scale, 1.2)) !important;
   transform-origin: center center !important;
 }
 
-/* During Back, leave fixed positioning BEFORE React closes detail. This lets GSAP
-   animate the bottle's normal carousel variables smoothly instead of jumping from
-   a fixed viewport position to the carousel transform. */
+/* During Back, keep exactly the same geometry. GSAP can therefore reverse the
+   same base variables without a fixed-position -> carousel-position jump. */
 .showcase.is-detail.detail-closing .bottle[data-bottle-active="true"] {
   position: absolute !important;
   left: 50% !important;
@@ -39,7 +48,6 @@
   z-index: 90 !important;
   opacity: 1 !important;
   visibility: visible !important;
-  transform: translate3d(calc(-50% + var(--base-x, 0vw) + var(--parallax-x, 0px)), calc(-50% + var(--base-y, 0vh) + var(--parallax-y, 0px)), 0) rotate(var(--base-rotation, 0deg)) scale(var(--base-scale, 1.2)) !important;
 }
 
 .showcase.is-detail.detail-closing .bottle:not([data-bottle-active="true"]) {
@@ -69,10 +77,15 @@
 
 @media (max-width: 800px) {
   .showcase.is-detail .bottle[data-bottle-active="true"] {
-    left: 50vw !important;
-    top: 31vh !important;
-    transform: translate3d(-50%, -50%, 0) scale(1.05) !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate3d(
+      calc(-50% + var(--base-x, 0vw) + var(--parallax-x, 0px)),
+      calc(-50% + var(--base-y, 0vh) + var(--parallax-y, 0px)),
+      0
+    ) rotate(var(--base-rotation, 0deg)) scale(var(--base-scale, 1.2)) !important;
   }
+
   .showcase.is-detail .detail-copy {
     left: 50vw !important;
     top: 72vh !important;
