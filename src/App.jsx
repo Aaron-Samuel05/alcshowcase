@@ -307,7 +307,7 @@ function App() {
     gsap.set(infoRef.current, { opacity: 0, y: 12, filter: 'blur(6px)' })
     gsap.set(counterRef.current, { opacity: 0, y: 12, filter: 'blur(6px)' })
     gsap.set(actionRef.current, { opacity: 0, y: 12, filter: 'blur(6px)' })
-    gsap.set(otherBottles, { opacity: 0, filter: 'blur(12px)' })
+    gsap.set(otherBottles, { opacity: 0, filter: 'blur(12px)', zIndex: 1 })
 
     setDetailOpen(true)
 
@@ -331,7 +331,7 @@ function App() {
           '--base-rotation': '0deg',
           opacity: 1,
           filter: 'drop-shadow(0 28px 22px rgba(0,0,0,.36)) blur(0px)',
-          zIndex: 60,
+          zIndex: 90,
           duration: 0.82,
           ease: 'power4.inOut',
         }, 0)
@@ -378,68 +378,45 @@ function App() {
     gsap.set(infoRef.current, { opacity: 0, y: 12, filter: 'blur(6px)' })
     gsap.set(counterRef.current, { opacity: 0, y: 12, filter: 'blur(6px)' })
     gsap.set(actionRef.current, { opacity: 0, y: 12, filter: 'blur(6px)' })
-    gsap.set(detailButtonRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
-    gsap.set(detailInfoRef.current, { opacity: 1, filter: 'blur(0px)' })
-
-    setDetailOpen(false)
 
     const timeline = gsap.timeline({
       defaults: { ease: 'power3.inOut' },
       onComplete: () => {
-        otherBottles.forEach((node) => {
-          const index = bottleRefs.current.indexOf(node)
-          const next = activeRef.current === wrap(index - 1)
-          const prev = activeRef.current === wrap(index + 1)
-          setBottlePosition(node, next ? positions.next : prev ? positions.prev : positions.hiddenRight)
-        })
-        setBottlePosition(hero, positions.hero)
-        resetParallax(true)
+        setDetailOpen(false)
         gsap.set(detailRef.current, { opacity: 0 })
-        gsap.set(detailInfoRef.current, { opacity: 0, filter: 'blur(8px)' })
-        gsap.set(detailButtonRef.current, { opacity: 0, y: -6, filter: 'blur(4px)' })
+        setBottlePosition(hero, positions.hero)
+        otherBottles.forEach((node, i) => {
+          const idx = bottleRefs.current.indexOf(node)
+          const position = idx === wrap(activeRef.current + 1) ? positions.next : idx === wrap(activeRef.current - 1) ? positions.prev : positions.hiddenRight
+          setBottlePosition(node, position)
+        })
         lockedRef.current = false
       },
     })
 
     timeline
-      .to(detailInfoRef.current, {
-        opacity: 0,
-        filter: 'blur(5px)',
-        duration: 0.22,
-      }, 0)
-      .to(detailButtonRef.current, {
-        opacity: 0,
-        y: -6,
-        filter: 'blur(5px)',
-        duration: 0.22,
-      }, 0)
-      .to(detailRef.current, { opacity: 0, duration: 0.42 }, 0.02)
+      .to(detailInfoRef.current, { opacity: 0, filter: 'blur(8px)', duration: 0.28 }, 0)
+      .to(detailButtonRef.current, { opacity: 0, y: -6, filter: 'blur(4px)', duration: 0.24 }, 0)
       .to(hero, {
         '--base-x': '0vw',
         '--base-y': '0vh',
         '--base-scale': 1.2,
         '--base-rotation': '0deg',
         opacity: 1,
-        zIndex: 4,
         filter: 'drop-shadow(0 28px 22px rgba(0,0,0,.36)) blur(0px)',
+        zIndex: 4,
         duration: 0.72,
-        ease: 'power4.inOut',
       }, 0.02)
-      .to([infoRef.current, counterRef.current, actionRef.current], {
-        opacity: 1,
+      .to(otherBottles, { opacity: 0, filter: 'blur(12px)', duration: 0.18 }, 0)
+      .to(detailRef.current, { opacity: 0, duration: 0.32 }, 0.42)
+      .to([titleRef.current, infoRef.current, counterRef.current, actionRef.current], {
+        opacity: (i) => i === 0 ? 0.22 : 1,
         y: 0,
         filter: 'blur(0px)',
         duration: 0.42,
         stagger: 0.035,
         ease: 'power3.out',
       }, 0.22)
-      .to(titleRef.current, {
-        opacity: 0.22,
-        y: 0,
-        filter: 'blur(0px)',
-        duration: 0.42,
-        ease: 'power3.out',
-      }, 0.24)
   }
 
   return (
@@ -478,6 +455,7 @@ function App() {
             key={p.id}
             ref={(node) => { bottleRefs.current[i] = node }}
             className={`bottle bottle-${p.id}`}
+            data-bottle-index={i}
             src={p.image}
             alt={p.name}
             draggable="false"
@@ -519,6 +497,10 @@ function App() {
             <div><dt>STYLE</dt><dd>{current.style}</dd></div>
             <div><dt>ORIGIN</dt><dd>{current.origin}</dd></div>
           </dl>
+        </div>
+
+        <div className="detail-bottle-wrap" aria-hidden="true">
+          <img className="detail-bottle" src={current.image} alt="" draggable="false" />
         </div>
       </section>
     </main>
