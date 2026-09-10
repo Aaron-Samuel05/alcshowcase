@@ -4,25 +4,37 @@
       title: 'A modern New York spirit.',
       story: 'New Amsterdam is built around a clean, approachable vodka style with a distinctly contemporary New York identity. Its character is intentionally polished and versatile, designed to work just as naturally in a simple pour as it does in a crafted cocktail.',
       history: 'The brand takes its name from the original Dutch settlement that became New York City, connecting the bottle to the city’s early identity while presenting it through a modern spirits lens.',
-      craft: 'A deliberately contemporary expression: clean, versatile and made to keep the focus on the drink rather than overpower it.'
+      craft: 'Clean, versatile and deliberately contemporary — an expression designed to keep the focus on the drink rather than overpower it.',
+      image: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1800&q=85',
+      imageAlt: 'Moody cocktail bar in New York',
+      imageLabel: 'NEW YORK / AFTER DARK'
     },
     'Captain Morgan': {
       title: 'Born from Caribbean rum culture.',
       story: 'Captain Morgan is defined by a rich rum base layered with warm spice and caramel character. The result is a fuller, darker profile that has become closely associated with relaxed Caribbean-inspired drinking and long, social nights.',
       history: 'The brand is named after Sir Henry Morgan, the Welsh privateer who became governor of Jamaica in the 17th century. Its identity draws heavily from the island’s rum heritage and maritime folklore.',
-      craft: 'Warm, rounded and unmistakably spiced, the expression leans into the generous character that makes rum work so well in long drinks and shared occasions.'
+      craft: 'Warm, rounded and unmistakably spiced, the expression leans into the generous character that makes rum work so well in long drinks and shared occasions.',
+      image: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=1800&q=85',
+      imageAlt: 'Dark rum cocktail in a tropical bar',
+      imageLabel: 'CARIBBEAN / RUM CULTURE'
     },
     'Hendrick’s': {
       title: 'An eccentric approach to gin.',
       story: 'Hendrick’s takes a deliberately unconventional route to gin, combining a botanical foundation with the distinctive influence of rose and cucumber. The result is floral, fresh and unmistakably different from a traditional London-style profile.',
       history: 'Hendrick’s was introduced in Scotland in the late 1990s and became known for pairing traditional gin distillation with an unusually expressive botanical recipe and a distinctive apothecary-inspired identity.',
-      craft: 'Rose brings a soft floral lift while cucumber gives the profile its cool, fresh edge — a pairing that became central to the brand’s signature character.'
+      craft: 'Rose brings a soft floral lift while cucumber gives the profile its cool, fresh edge — a pairing that became central to the brand’s signature character.',
+      image: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=1800&q=85',
+      imageAlt: 'Botanical gin cocktail with fresh garnish',
+      imageLabel: 'BOTANICALS / SCOTLAND'
     },
     'Appleton Estate V/X': {
       title: 'Jamaican rum with estate heritage.',
       story: 'Appleton Estate V/X reflects Jamaica’s deep rum-making tradition, bringing together rounded molasses character, warm spice and tropical fruit notes. Its style is generous and approachable while retaining the depth associated with aged Jamaican rum.',
       history: 'Appleton Estate traces its roots to Jamaica’s Nassau Valley, where rum has been produced for centuries. The estate’s heritage is closely tied to Jamaican sugarcane, local fermentation and the island’s distinctive pot-still tradition.',
-      craft: 'Jamaica’s landscape and production traditions shape the profile: tropical richness, warm spice and the distinctive depth associated with estate-made rum.'
+      craft: 'Jamaica’s landscape and production traditions shape the profile: tropical richness, warm spice and the distinctive depth associated with estate-made rum.',
+      image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=1800&q=85',
+      imageAlt: 'Rum bottles and warm bar lighting',
+      imageLabel: 'JAMAICA / ESTATE HERITAGE'
     }
   }
 
@@ -48,37 +60,68 @@
       title: `The character of ${name}.`,
       story: `A carefully composed ${category.toLowerCase()} selected for its distinctive character, balance and place within the collection.`,
       history: 'Its story is rooted in the traditions, ingredients and craft that define its category.',
-      craft: 'Its production character is part of what gives this expression its place within the collection.'
+      craft: 'Its production character is part of what gives this expression its place within the collection.',
+      image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=1800&q=85',
+      imageAlt: 'Spirits and glassware in atmospheric light',
+      imageLabel: 'THE COLLECTION'
     }
 
     content.innerHTML = `
       <div class="detail-scroll-spacer"></div>
-      <div class="detail-scroll-section detail-scroll-story-section">
-        <div class="detail-scroll-inner">
-          <p class="detail-scroll-kicker">01 / THE STORY</p>
-          <h3 class="detail-scroll-title">${story.title}</h3>
-          <p class="detail-scroll-copy">${story.story}</p>
-          <div class="detail-scroll-grid">
-            <div class="detail-scroll-fact"><span>STYLE</span><strong>${facts[0] || 'Signature expression'}</strong></div>
-            <div class="detail-scroll-fact"><span>ORIGIN</span><strong>${facts[1] || '—'}</strong></div>
-            <div class="detail-scroll-fact"><span>CATEGORY</span><strong>${category}</strong></div>
+      <section class="detail-scroll-section detail-scroll-story-section">
+        <div class="detail-scroll-inner detail-scroll-story-layout">
+          <div class="detail-scroll-story-copy">
+            <p class="detail-scroll-kicker">01 / THE STORY</p>
+            <h3 class="detail-scroll-title">${story.title}</h3>
+            <p class="detail-scroll-copy">${story.story}</p>
+            <div class="detail-scroll-origin">
+              <span>ORIGIN</span>
+              <strong>${facts[1] || 'SELECTED ORIGIN'}</strong>
+            </div>
           </div>
+          <figure class="detail-scroll-visual detail-scroll-visual-story">
+            <img src="${story.image}" alt="${story.imageAlt}" loading="lazy" />
+            <figcaption><span>${story.imageLabel}</span><i></i></figcaption>
+          </figure>
         </div>
-      </div>
-      <div class="detail-scroll-section detail-scroll-heritage-section">
-        <div class="detail-scroll-inner detail-scroll-story">
-          <h3>Heritage</h3>
-          <div class="detail-scroll-heritage-copy">
-            <p>${story.history}</p>
+      </section>
+      <section class="detail-scroll-section detail-scroll-heritage-section">
+        <div class="detail-scroll-inner detail-scroll-heritage-layout">
+          <figure class="detail-scroll-visual detail-scroll-visual-heritage">
+            <img src="${story.image}" alt="${story.imageAlt}" loading="lazy" />
+            <figcaption><span>ARCHIVE / 02</span><i></i></figcaption>
+          </figure>
+          <div class="detail-scroll-story-copy detail-scroll-heritage-copy">
+            <p class="detail-scroll-kicker">02 / HERITAGE</p>
+            <h3>Where the story begins.</h3>
+            <p class="detail-scroll-lead">${story.history}</p>
             <p>${story.craft}</p>
             <div class="detail-scroll-callout">
               <span>03 / CHARACTER</span>
-              <strong>${facts[0] || 'SIGNATURE EXPRESSION'} · ${facts[1] || 'ORIGIN'} · ${category}</strong>
+              <strong>${facts[0] || 'SIGNATURE EXPRESSION'} · ${category}</strong>
             </div>
           </div>
         </div>
-      </div>
-      <div class="detail-scroll-section detail-scroll-end">
+      </section>
+      <section class="detail-scroll-section detail-scroll-character-section">
+        <div class="detail-scroll-character-image" style="background-image:url('${story.image}')"></div>
+        <div class="detail-scroll-character-overlay"></div>
+        <div class="detail-scroll-inner detail-scroll-character-content">
+          <p class="detail-scroll-kicker">03 / CHARACTER</p>
+          <div class="detail-scroll-character-row">
+            <h3>${name}</h3>
+            <div>
+              <span>STYLE</span>
+              <strong>${facts[0] || 'SIGNATURE STYLE'}</strong>
+              <span>ORIGIN</span>
+              <strong>${facts[1] || 'SELECTED ORIGIN'}</strong>
+              <span>CATEGORY</span>
+              <strong>${category}</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="detail-scroll-section detail-scroll-end">
         <div>
           <p>END OF EDITION</p>
           <h3>${name}</h3>
@@ -88,7 +131,7 @@
             <span>${facts[0] || 'SIGNATURE STYLE'}</span>
           </div>
         </div>
-      </div>
+      </section>
     `
 
     if (!view.querySelector('.detail-scroll-hint')) {
@@ -135,6 +178,15 @@
     const copyFade = smoothstep((progress - 0.72) / 0.28)
     copy.style.opacity = String(1 - copyFade * 0.9)
     showcase.classList.toggle('detail-scrolled', progress > 0.04)
+
+    const scrollRatio = clamp01(view.scrollTop / Math.max(1, view.scrollHeight - window.innerHeight))
+    view.querySelectorAll('.detail-scroll-visual img').forEach((img, index) => {
+      const local = smoothstep(clamp01((scrollRatio * 4.5) - index * 0.55))
+      img.style.transform = `scale(${1.08 - local * 0.035}) translate3d(0, ${12 - local * 12}%, 0)`
+    })
+    view.querySelectorAll('.detail-scroll-character-image').forEach((image) => {
+      image.style.transform = `scale(1.08) translate3d(0, ${scrollRatio * -5}%, 0)`
+    })
   }
 
   function resetScroll(view) {
