@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/layout-fix.css" />
+    <link rel="stylesheet" href="/layout-fix.css?v=20260910-3" />
     <link rel="stylesheet" href="/typography.css" />
     <link rel="stylesheet" href="/detail-scroll.css" />
     <link rel="stylesheet" href="/detail-hero-fix.css" />
@@ -45,8 +45,6 @@
         if (showcase) showcase.classList.add('detail-closing')
       }, true)
 
-      // Observe only class changes needed to identify the detail hero. The old
-      // broad subtree/attribute observer was doing unnecessary work during animation.
       new MutationObserver(syncDetailBottle).observe(document.body, {
         childList: true,
         subtree: true,
