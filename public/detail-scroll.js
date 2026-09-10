@@ -29,7 +29,7 @@
     if (!view) return
     let content = view.querySelector('.detail-scroll-content')
     if (!content) { content = document.createElement('div'); content.className = 'detail-scroll-content'; view.appendChild(content) }
-    const name = view.querySelector('.detail-copy h2')?.textContent?.trim() || 'Selected Bottle'
+    const name = (view.getAttribute('aria-label') || '').replace(/\s+details\s*$/i, '').trim() || view.querySelector('.detail-copy h2')?.textContent?.trim() || 'Selected Bottle'
     const category = view.querySelector('.detail-copy .eyebrow')?.textContent?.trim() || ''
     const facts = [...view.querySelectorAll('.detail-copy dl dd')].map((el) => el.textContent.trim())
     const story = histories[name] || { title: `The character of ${name}.`, story: `A carefully composed ${category.toLowerCase()} selected for its distinctive character, balance and place within the collection.`, history: 'Its story is rooted in the traditions, ingredients and craft that define its category.', craft: 'Its production character is part of what gives this expression its place within the collection.', images: [{ url: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=1800&q=85', alt: 'Atmospheric spirits still life', label: 'THE COLLECTION' }] }
