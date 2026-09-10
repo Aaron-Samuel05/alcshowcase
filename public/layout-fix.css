@@ -18,25 +18,21 @@
   cursor: pointer;
 }
 
-/* Optical centering: compensate for the transparent/asymmetric margins
-   inside each source PNG without touching GSAP's animated base position. */
+/* Optical centering on the showcase. Each source PNG has different transparent
+   margins, so the visible bottle is corrected without changing GSAP geometry. */
 .bottle-1 { margin-left: 0.8vw; }
-.bottle-2 { margin-left: 10vw; }
+.bottle-2 { margin-left: 1.8vw; }
 .bottle-3 { margin-left: 0.5vw; }
-.bottle-4 { margin-left: 12vw; }
+.bottle-4 { margin-left: 2.4vw; }
 
-/* Detail view: align the visible artwork, not the transparent PNG box.
-   New Amsterdam needs an additional 5.5vw optical correction so its visible
-   centre lands on the centre of the right half of the desktop composition. */
-.showcase.is-detail .bottle-1 {
-  margin-left: 8vw;
-}
-.showcase.is-detail .bottle-3 {
-  margin-left: 2.5vw;
-}
-.showcase.is-detail .bottle-2 {
-  margin-left: 17.5vw;
-}
+/* DETAIL COMPOSITION
+   The detail hero belongs to the visual center of the RIGHT HALF of the
+   viewport, not the center of the full viewport. The existing GSAP base-x
+   handles the animated travel; this optical correction finishes the landing
+   position for every bottle consistently. */
+.showcase.is-detail .bottle-1,
+.showcase.is-detail .bottle-2,
+.showcase.is-detail .bottle-3,
 .showcase.is-detail .bottle-4 {
-  margin-left: 12vw;
+  margin-left: 8vw !important;
 }
