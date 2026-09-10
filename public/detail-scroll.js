@@ -80,22 +80,49 @@
 
   function captureHeroGeometry(view) { const copy = view.querySelector('.detail-copy'); if (!copy) return; const rect = copy.getBoundingClientRect(); view.dataset.heroShift = String((window.innerWidth / 2) - (rect.left + rect.width / 2)) }
 
+  function getActiveHero() {
+    const showcase = document.querySelector('.showcase')
+    const hero = showcase ? showcase.querySelector('.bottle[aria-current="true"]') : null
+    return hero || document.querySelector('.showcase.is-detail .bottle')
+  }
+
   function updateHeroScroll(view) {
     const showcase = document.querySelector('.showcase'), copy = view.querySelector('.detail-copy'); if (!showcase || !copy) return
     if (!view.dataset.heroShift) captureHeroGeometry(view)
     const progress = clamp01(view.scrollTop / Math.max(1, window.innerHeight * 0.82)), eased = smoothstep(progress), heroShift = Number.parseFloat(view.dataset.heroShift || '0')
     copy.style.setProperty('--scroll-x', `${heroShift * eased}px`); copy.style.setProperty('--scroll-y', `${-8 * eased}px`); copy.style.setProperty('--scroll-scale', `${1 - eased * 0.035}`)
-    document.querySelectorAll('.showcase.is-detail .bottle').forEach((bottle) => { bottle.style.opacity = '1'; bottle.style.filter = 'drop-shadow(0 28px 22px rgba(0,0,0,.36))' })
-    copy.style.opacity = String(1 - smoothstep((progress - 0.72) / 0.28) * 0.9); showcase.classList.toggle('detail-scrolled', progress > 0.04)
+
+    const hero = getActiveHero()
+    document.querySelectorAll('.showcase.is-detail .bottle').forEach((bottle) => {
+      if (bottle === hero) {
+        bottle.style.opacity = '1'
+        bottle.style.filter = 'drop-shadow(0 28px 22px rgba(0,0,0,.36))'
+        bottle.style.zIndex = '90'
+      } else {
+        bottle.style.opacity = '0'
+        bottle.style.filter = 'blur(12px)'
+        bottle.style.zIndex = '1'
+      }
+    })
+
+    copy.style.opacity = String(1 - smoothstep((progress - 0.72) / 0.28) * 0.9)
+    showcase.classList.toggle('detail-scrolled', progress > 0.04)
     const scrollRatio = clamp01(view.scrollTop / Math.max(1, view.scrollHeight - window.innerHeight))
     view.querySelectorAll('.detail-scroll-visual img').forEach((img, index) => { const local = smoothstep(clamp01((scrollRatio * 4.5) - index * 0.55)); img.style.transform = `scale(${1.08 - local * 0.035}) translate3d(0, ${12 - local * 12}%, 0)` })
     view.querySelectorAll('.detail-scroll-character-image').forEach((image) => { image.style.transform = `scale(1.08) translate3d(0, ${scrollRatio * -5}%, 0)` })
   }
 
   function resetScroll(view) {
-    view.scrollTop = 0; const showcase = document.querySelector('.showcase'), copy = view.querySelector('.detail-copy'); showcase?.classList.remove('detail-scrolled')
+    view.scrollTop = 0
+    const showcase = document.querySelector('.showcase'), copy = view.querySelector('.detail-copy')
+    showcase?.classList.remove('detail-scrolled')
     if (copy) { copy.style.setProperty('--scroll-x','0px'); copy.style.setProperty('--scroll-y','0px'); copy.style.setProperty('--scroll-scale','1'); copy.style.opacity='' }
-    delete view.dataset.heroShift; document.querySelectorAll('.showcase .bottle').forEach((bottle) => { bottle.style.opacity=''; bottle.style.filter='' })
+    delete view.dataset.heroShift
+    const activeIndex = showcase?.querySelector('.bottle[aria-current="true"]')
+    document.querySelectorAll('.showcase .bottle').forEach((bottle) => {
+      bottle.style.opacity = bottle === activeIndex ? '' : '0'
+      bottle.style.filter = bottle === activeIndex ? '' : 'blur(12px)'
+    })
     requestAnimationFrame(() => { view.scrollTop=0; captureHeroGeometry(view); showcase?.classList.remove('detail-scrolled'); updateHeroScroll(view) })
   }
 
