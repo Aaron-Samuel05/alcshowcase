@@ -18,17 +18,23 @@
   cursor: pointer;
 }
 
-/* Optical centering: each PNG has different transparent side margins, so
-   centering the image box does not necessarily center the visible bottle. */
+/* Optical centering: compensate for the transparent/asymmetric margins
+   inside each source PNG without touching GSAP's animated base position. */
 .bottle-1 { margin-left: 0.8vw; }
-.bottle-2 { margin-left: 1.8vw; }
+.bottle-2 { margin-left: 10vw; }
 .bottle-3 { margin-left: 0.5vw; }
-.bottle-4 { margin-left: 2.4vw; }
+.bottle-4 { margin-left: 12vw; }
 
-/* Keep the detail composition's existing right-side offset intact. */
+/* Detail view: the hero composition intentionally lives on the right half.
+   These offsets compensate for the source PNG bounds so the visible bottle,
+   rather than its transparent image box, lands on the visual center. */
 .showcase.is-detail .bottle-1,
-.showcase.is-detail .bottle-2,
-.showcase.is-detail .bottle-3,
-.showcase.is-detail .bottle-4 {
+.showcase.is-detail .bottle-3 {
   margin-left: 2.5vw;
+}
+.showcase.is-detail .bottle-2 {
+  margin-left: 17.5vw;
+}
+.showcase.is-detail .bottle-4 {
+  margin-left: 12vw;
 }
