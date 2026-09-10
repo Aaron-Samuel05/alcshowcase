@@ -18,16 +18,14 @@
   cursor: pointer;
 }
 
-/* Optical centering: the PNGs have different transparent side margins, so
-   mathematical centering of the image box does not visually center the bottle.
-   Compensate per asset while leaving GSAP's base/parallax transforms untouched. */
+/* Optical centering: each PNG has different transparent side margins, so
+   centering the image box does not necessarily center the visible bottle. */
 .bottle-1 { margin-left: 0.8vw; }
 .bottle-2 { margin-left: 1.8vw; }
 .bottle-3 { margin-left: 0.5vw; }
 .bottle-4 { margin-left: 2.4vw; }
 
-/* Detail view has its own intentional right-side composition; preserve the
-   existing smooth transition while applying the optical correction above. */
+/* Keep the detail composition's existing right-side offset intact. */
 .showcase.is-detail .bottle-1,
 .showcase.is-detail .bottle-2,
 .showcase.is-detail .bottle-3,
