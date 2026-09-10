@@ -1,0 +1,53 @@
+/* Rendering budget: keep the expensive layers isolated and promote only the
+   elements that actually animate. Visual effects remain; layout stays on CPU. */
+.showcase,
+.product-stage,
+.stage-foot,
+.detail-view {
+  isolation: isolate;
+}
+
+.showcase .bottle,
+.showcase .title-wrap,
+.showcase .detail-copy {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+.showcase .bottle:not([data-bottle-active="true"]) {
+  contain: paint;
+}
+
+.detail-scroll-section {
+  contain: layout paint style;
+  content-visibility: auto;
+  contain-intrinsic-size: 88svh;
+}
+
+.detail-scroll-visual,
+.detail-scroll-character-section {
+  contain: paint;
+}
+
+.detail-scroll-visual img,
+.detail-scroll-character-image {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Avoid keeping large archive images in the rendering pipeline while they are
+   far below the viewport. Native lazy loading still handles network loading. */
+.detail-scroll-visual img {
+  content-visibility: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showcase .bottle,
+  .showcase .title-wrap,
+  .showcase .detail-copy,
+  .detail-scroll-visual img,
+  .detail-scroll-character-image {
+    will-change: auto;
+  }
+}
