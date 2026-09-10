@@ -22,6 +22,12 @@
     }
   }
 
+  const clamp01 = (value) => Math.max(0, Math.min(1, value))
+  const smoothstep = (value) => {
+    const t = clamp01(value)
+    return t * t * (3 - 2 * t)
+  }
+
   function buildDetails(view) {
     if (!view) return
     let content = view.querySelector('.detail-scroll-content')
@@ -79,19 +85,62 @@
     }
   }
 
-  function setScrolledState(view) {
+  function updateHeroScroll(view) {
     const showcase = document.querySelector('.showcase')
-    if (!showcase) return
-    showcase.classList.toggle('detail-scrolled', view.scrollTop > 80)
+    const copy = view.querySelector('.detail-copy')
+    if (!showcase || !copy) return
+
+    const progress = clamp01(view.scrollTop / Math.max(1, window.innerHeight * 0.92))
+    const eased = smoothstep(progress)
+
+    // Calculate the exact horizontal distance from the copy's current left anchor
+    // to the viewport center, so every screen size lands on true visual center.
+    const copyRect = copy.getBoundingClientRect()
+    const targetX = (window.innerWidth / 2) - (copyRect.left + copyRect.width / 2)
+
+    copy.style.setProperty('--scroll-x', `${targetX * eased}px`)
+    copy.style.setProperty('--scroll-y', `${-8 * eased}px`)
+    copy.style.setProperty('--scroll-scale', `${1 - eased * 0.035}`)
+
+    // The bottle exits slightly faster than the copy arrives, giving the impression
+    // that the typography is taking over the composition rather than jumping into it.
+    const bottleProgress = smoothstep(progress / 0.78)
+    const bottleOpacity = 1 - bottleProgress
+    const bottles = document.querySelectorAll('.showcase.is-detail .bottle')
+    bottles.forEach((bottle) => {
+      const isHero = Number.parseInt(getComputedStyle(bottle).zIndex || '0', 10) >= 50
+      if (isHero) {
+        bottle.style.opacity = String(bottleOpacity)
+        bottle.style.filter = `drop-shadow(0 28px 22px rgba(0,0,0,.36)) blur(${bottleProgress * 4}px)`
+      }
+    })
+
+    // Once the hero handoff is complete, let the story take visual priority.
+    const copyFade = smoothstep((progress - 0.72) / 0.28)
+    copy.style.opacity = String(1 - copyFade * 0.88)
+
+    showcase.classList.toggle('detail-scrolled', progress > 0.04)
   }
 
   function resetScroll(view) {
     view.scrollTop = 0
     const showcase = document.querySelector('.showcase')
+    const copy = view.querySelector('.detail-copy')
     showcase?.classList.remove('detail-scrolled')
+    if (copy) {
+      copy.style.setProperty('--scroll-x', '0px')
+      copy.style.setProperty('--scroll-y', '0px')
+      copy.style.setProperty('--scroll-scale', '1')
+      copy.style.opacity = ''
+    }
+    document.querySelectorAll('.showcase .bottle').forEach((bottle) => {
+      bottle.style.opacity = ''
+      bottle.style.filter = ''
+    })
     requestAnimationFrame(() => {
       view.scrollTop = 0
       showcase?.classList.remove('detail-scrolled')
+      updateHeroScroll(view)
     })
   }
 
@@ -99,9 +148,11 @@
     if (!view || view.dataset.scrollReady === 'true') return
     view.dataset.scrollReady = 'true'
 
-    // The detail page owns the wheel interaction while it is open.
     view.addEventListener('wheel', (event) => event.stopPropagation(), { passive: true })
-    view.addEventListener('scroll', () => setScrolledState(view), { passive: true })
+    view.addEventListener('scroll', () => updateHeroScroll(view), { passive: true })
+    window.addEventListener('resize', () => {
+      if (view.getAttribute('aria-hidden') === 'false') updateHeroScroll(view)
+    }, { passive: true })
 
     const observer = new MutationObserver(() => {
       const isOpen = view.getAttribute('aria-hidden') === 'false'
