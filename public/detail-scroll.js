@@ -44,7 +44,7 @@
     if (!showcase || !copy) return
     const hero = document.querySelector('.showcase.is-detail .bottle[data-bottle-active="true"]')
     const progress = clamp01(view.scrollTop / Math.max(1, window.innerHeight * 0.9))
-    // Hero and copy leave together. They never translate with the archive.
+    // The opening hero fades as one unit. The archive starts only after both are gone.
     const fade = 1 - smoothstep(progress / 0.22)
     const lift = smoothstep(progress / 0.22)
     copy.style.setProperty('--scroll-x', `${-18 * lift}px`)
@@ -52,7 +52,7 @@
     copy.style.setProperty('--scroll-scale', `${1 - lift * 0.025}`)
     copy.style.opacity = String(fade)
     if (hero) {
-      hero.style.opacity = String(fade)
+      hero.style.setProperty('--detail-hero-opacity', String(fade))
       hero.style.visibility = fade <= 0.01 ? 'hidden' : 'visible'
     }
     showcase.classList.toggle('detail-archive-active', fade <= 0.01)
@@ -65,7 +65,7 @@
     showcase?.classList.remove('detail-scrolled', 'detail-archive-active')
     if (copy) { copy.style.setProperty('--scroll-x','0px'); copy.style.setProperty('--scroll-y','0px'); copy.style.setProperty('--scroll-scale','1'); copy.style.opacity='' }
     const hero = document.querySelector('.showcase.is-detail .bottle[data-bottle-active="true"]')
-    if (hero) { hero.style.opacity='1'; hero.style.visibility='visible' }
+    if (hero) { hero.style.setProperty('--detail-hero-opacity','1'); hero.style.visibility='visible' }
     requestAnimationFrame(() => updateHeroScroll(view))
   }
 
