@@ -39,35 +39,24 @@
     if (!view.querySelector('.detail-scroll-hint')) { const hint = document.createElement('div'); hint.className = 'detail-scroll-hint'; hint.innerHTML = 'SCROLL TO DISCOVER<span>↓</span>'; view.appendChild(hint) }
   }
 
-  function captureHeroGeometry(view) { const copy = view.querySelector('.detail-copy'); if (!copy) return; const rect = copy.getBoundingClientRect(); view.dataset.heroShift = String((window.innerWidth / 2) - (rect.left + rect.width / 2)) }
-  function getActiveHero() { return document.querySelector('.showcase.is-detail .bottle[data-bottle-active="true"]') || document.querySelector('.showcase.is-detail .bottle') }
-
   function updateHeroScroll(view) {
-    const showcase = document.querySelector('.showcase'), copy = view.querySelector('.detail-copy'); if (!showcase || !copy) return
-    if (!view.dataset.heroShift) captureHeroGeometry(view)
-    const progress = clamp01(view.scrollTop / Math.max(1, window.innerHeight * 0.82)), eased = smoothstep(progress), heroShift = Number.parseFloat(view.dataset.heroShift || '0')
-    copy.style.setProperty('--scroll-x', `${heroShift * eased}px`); copy.style.setProperty('--scroll-y', `${-8 * eased}px`); copy.style.setProperty('--scroll-scale', `${1 - eased * 0.035}`)
-
-    const hero = getActiveHero()
-    const heroOpacity = 1 - smoothstep((progress - 0.025) / 0.16)
-    showcase.classList.toggle('detail-archive-active', progress > 0.035)
-    document.querySelectorAll('.showcase.is-detail .bottle').forEach((bottle) => {
-      if (bottle === hero) {
-        bottle.style.opacity = String(heroOpacity)
-        bottle.style.filter = 'drop-shadow(0 28px 22px rgba(0,0,0,.36))'
-        bottle.style.zIndex = '90'
-      } else {
-        bottle.style.opacity = '0'
-        bottle.style.filter = 'blur(12px)'
-        bottle.style.zIndex = '1'
-      }
-    })
-
-    copy.style.opacity = String(1 - smoothstep((progress - 0.72) / 0.28) * 0.9)
-    showcase.classList.toggle('detail-scrolled', progress > 0.04)
-    const scrollRatio = clamp01(view.scrollTop / Math.max(1, view.scrollHeight - window.innerHeight))
-    view.querySelectorAll('.detail-scroll-visual img').forEach((img, index) => { const local = smoothstep(clamp01((scrollRatio * 4.5) - index * 0.55)); img.style.transform = `scale(${1.08 - local * 0.035}) translate3d(0, ${12 - local * 12}%, 0)` })
-    view.querySelectorAll('.detail-scroll-character-image').forEach((image) => { image.style.transform = `scale(1.08) translate3d(0, ${scrollRatio * -5}%, 0)` })
+    const showcase = document.querySelector('.showcase'), copy = view.querySelector('.detail-copy')
+    if (!showcase || !copy) return
+    const hero = document.querySelector('.showcase.is-detail .bottle[data-bottle-active="true"]')
+    const progress = clamp01(view.scrollTop / Math.max(1, window.innerHeight * 0.9))
+    // Hero and copy leave together. They never translate with the archive.
+    const fade = 1 - smoothstep(progress / 0.22)
+    const lift = smoothstep(progress / 0.22)
+    copy.style.setProperty('--scroll-x', `${-18 * lift}px`)
+    copy.style.setProperty('--scroll-y', `${-18 * lift}px`)
+    copy.style.setProperty('--scroll-scale', `${1 - lift * 0.025}`)
+    copy.style.opacity = String(fade)
+    if (hero) {
+      hero.style.opacity = String(fade)
+      hero.style.visibility = fade <= 0.01 ? 'hidden' : 'visible'
+    }
+    showcase.classList.toggle('detail-archive-active', fade <= 0.01)
+    showcase.classList.toggle('detail-scrolled', progress > 0.02)
   }
 
   function resetScroll(view) {
@@ -75,9 +64,9 @@
     const showcase = document.querySelector('.showcase'), copy = view.querySelector('.detail-copy')
     showcase?.classList.remove('detail-scrolled', 'detail-archive-active')
     if (copy) { copy.style.setProperty('--scroll-x','0px'); copy.style.setProperty('--scroll-y','0px'); copy.style.setProperty('--scroll-scale','1'); copy.style.opacity='' }
-    delete view.dataset.heroShift
-    document.querySelectorAll('.showcase .bottle').forEach((bottle) => { bottle.style.opacity = ''; bottle.style.filter = ''; bottle.style.visibility = '' })
-    requestAnimationFrame(() => { view.scrollTop = 0; captureHeroGeometry(view); showcase?.classList.remove('detail-scrolled', 'detail-archive-active'); updateHeroScroll(view) })
+    const hero = document.querySelector('.showcase.is-detail .bottle[data-bottle-active="true"]')
+    if (hero) { hero.style.opacity='1'; hero.style.visibility='visible' }
+    requestAnimationFrame(() => updateHeroScroll(view))
   }
 
   function init(view) {
@@ -85,7 +74,7 @@
     view.dataset.scrollReady='true'
     view.addEventListener('wheel', (event) => event.stopPropagation(), { passive:true })
     view.addEventListener('scroll', () => updateHeroScroll(view), { passive:true })
-    window.addEventListener('resize', () => { if (view.getAttribute('aria-hidden') === 'false') { captureHeroGeometry(view); updateHeroScroll(view) } }, { passive:true })
+    window.addEventListener('resize', () => { if (view.getAttribute('aria-hidden') === 'false') updateHeroScroll(view) }, { passive:true })
     const observer = new MutationObserver(() => { const isOpen = view.getAttribute('aria-hidden') === 'false'; buildDetails(view); if (isOpen) resetScroll(view) })
     observer.observe(view, { attributes:true, attributeFilter:['aria-hidden'] })
     buildDetails(view)
