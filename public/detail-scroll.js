@@ -3,22 +3,26 @@
     'New Amsterdam': {
       title: 'A modern New York spirit.',
       story: 'New Amsterdam is built around a clean, approachable vodka style with a distinctly contemporary New York identity. Its character is intentionally polished and versatile, designed to work just as naturally in a simple pour as it does in a crafted cocktail.',
-      history: 'The brand takes its name from the original Dutch settlement that became New York City, connecting the bottle to the city’s early identity while presenting it through a modern spirits lens.'
+      history: 'The brand takes its name from the original Dutch settlement that became New York City, connecting the bottle to the city’s early identity while presenting it through a modern spirits lens.',
+      craft: 'A deliberately contemporary expression: clean, versatile and made to keep the focus on the drink rather than overpower it.'
     },
     'Captain Morgan': {
       title: 'Born from Caribbean rum culture.',
       story: 'Captain Morgan is defined by a rich rum base layered with warm spice and caramel character. The result is a fuller, darker profile that has become closely associated with relaxed Caribbean-inspired drinking and long, social nights.',
-      history: 'The brand is named after Sir Henry Morgan, the Welsh privateer who became governor of Jamaica in the 17th century. Its identity draws heavily from the island’s rum heritage and maritime folklore.'
+      history: 'The brand is named after Sir Henry Morgan, the Welsh privateer who became governor of Jamaica in the 17th century. Its identity draws heavily from the island’s rum heritage and maritime folklore.',
+      craft: 'Warm, rounded and unmistakably spiced, the expression leans into the generous character that makes rum work so well in long drinks and shared occasions.'
     },
     'Hendrick’s': {
       title: 'An eccentric approach to gin.',
       story: 'Hendrick’s takes a deliberately unconventional route to gin, combining a botanical foundation with the distinctive influence of rose and cucumber. The result is floral, fresh and unmistakably different from a traditional London-style profile.',
-      history: 'Hendrick’s was introduced in Scotland in the late 1990s and became known for pairing traditional gin distillation with an unusually expressive botanical recipe and a distinctive apothecary-inspired identity.'
+      history: 'Hendrick’s was introduced in Scotland in the late 1990s and became known for pairing traditional gin distillation with an unusually expressive botanical recipe and a distinctive apothecary-inspired identity.',
+      craft: 'Rose brings a soft floral lift while cucumber gives the profile its cool, fresh edge — a pairing that became central to the brand’s signature character.'
     },
     'Appleton Estate V/X': {
       title: 'Jamaican rum with estate heritage.',
       story: 'Appleton Estate V/X reflects Jamaica’s deep rum-making tradition, bringing together rounded molasses character, warm spice and tropical fruit notes. Its style is generous and approachable while retaining the depth associated with aged Jamaican rum.',
-      history: 'Appleton Estate traces its roots to Jamaica’s Nassau Valley, where rum has been produced for centuries. The estate’s heritage is closely tied to Jamaican sugarcane, local fermentation and the island’s distinctive pot-still tradition.'
+      history: 'Appleton Estate traces its roots to Jamaica’s Nassau Valley, where rum has been produced for centuries. The estate’s heritage is closely tied to Jamaican sugarcane, local fermentation and the island’s distinctive pot-still tradition.',
+      craft: 'Jamaica’s landscape and production traditions shape the profile: tropical richness, warm spice and the distinctive depth associated with estate-made rum.'
     }
   }
 
@@ -43,12 +47,13 @@
     const story = histories[name] || {
       title: `The character of ${name}.`,
       story: `A carefully composed ${category.toLowerCase()} selected for its distinctive character, balance and place within the collection.`,
-      history: 'Its story is rooted in the traditions, ingredients and craft that define its category.'
+      history: 'Its story is rooted in the traditions, ingredients and craft that define its category.',
+      craft: 'Its production character is part of what gives this expression its place within the collection.'
     }
 
     content.innerHTML = `
       <div class="detail-scroll-spacer"></div>
-      <div class="detail-scroll-section">
+      <div class="detail-scroll-section detail-scroll-story-section">
         <div class="detail-scroll-inner">
           <p class="detail-scroll-kicker">01 / THE STORY</p>
           <h3 class="detail-scroll-title">${story.title}</h3>
@@ -60,12 +65,16 @@
           </div>
         </div>
       </div>
-      <div class="detail-scroll-section">
+      <div class="detail-scroll-section detail-scroll-heritage-section">
         <div class="detail-scroll-inner detail-scroll-story">
           <h3>Heritage</h3>
-          <div>
+          <div class="detail-scroll-heritage-copy">
             <p>${story.history}</p>
-            <p>The details of the bottle — its style, origin and production character — are part of what makes this expression distinct within the collection.</p>
+            <p>${story.craft}</p>
+            <div class="detail-scroll-callout">
+              <span>03 / CHARACTER</span>
+              <strong>${facts[0] || 'SIGNATURE EXPRESSION'} · ${facts[1] || 'ORIGIN'} · ${category}</strong>
+            </div>
           </div>
         </div>
       </div>
@@ -73,6 +82,11 @@
         <div>
           <p>END OF EDITION</p>
           <h3>${name}</h3>
+          <div class="detail-scroll-end-meta">
+            <span>${category}</span>
+            <span>${facts[1] || 'SELECTED ORIGIN'}</span>
+            <span>${facts[0] || 'SIGNATURE STYLE'}</span>
+          </div>
         </div>
       </div>
     `
@@ -99,8 +113,6 @@
 
     if (!view.dataset.heroShift) captureHeroGeometry(view)
 
-    // The first ~0.8 viewport is one continuous cinematic handoff:
-    // bottle exits while the original left-aligned copy travels to true center.
     const progress = clamp01(view.scrollTop / Math.max(1, window.innerHeight * 0.82))
     const eased = smoothstep(progress)
     const heroShift = Number.parseFloat(view.dataset.heroShift || '0')
@@ -120,11 +132,8 @@
       }
     })
 
-    // Keep the hero copy visible while it reaches center, then dissolve it
-    // gently as the dedicated Story section takes over.
     const copyFade = smoothstep((progress - 0.72) / 0.28)
     copy.style.opacity = String(1 - copyFade * 0.9)
-
     showcase.classList.toggle('detail-scrolled', progress > 0.04)
   }
 
