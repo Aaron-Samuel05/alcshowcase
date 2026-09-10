@@ -1,0 +1,13 @@
+/* Keep the background collection title anchored to its CSS layout.
+   GSAP uses y/transform during product transitions; those transforms must not
+   replace the title's -50% centering transform. */
+.title-wrap {
+  transform:
+    translate3d(
+      calc(-50% + var(--parallax-x)),
+      calc(-50% + var(--parallax-y)),
+      0
+    )
+    rotateX(var(--parallax-rx))
+    rotateY(var(--parallax-ry)) !important;
+}
