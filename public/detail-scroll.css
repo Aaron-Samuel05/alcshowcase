@@ -28,8 +28,6 @@
   will-change: transform, opacity;
 }
 
-/* JS owns the bottle fade. Do not hide the entire stage at the first few
-   pixels of scroll or the bottle will disappear before the copy reaches center. */
 .showcase.detail-scrolled .product-stage {
   opacity: 1 !important;
   transform: scale(.992) translateY(-1vh);
@@ -39,21 +37,24 @@
 
 .detail-scroll-content {
   position: relative;
-  min-height: 300svh;
+  min-height: 285svh;
   padding-top: 100svh;
+  overflow: hidden;
 }
 
 .detail-scroll-spacer { height: 0; }
 
 .detail-scroll-section {
   position: relative;
-  min-height: 100svh;
-  padding: clamp(5rem, 10vw, 9rem) clamp(1.5rem, 8vw, 9rem);
+  min-height: 88svh;
+  padding: clamp(4.5rem, 8vw, 7.5rem) clamp(1.5rem, 7vw, 8rem);
   display: grid;
   align-content: center;
   background:
-    linear-gradient(180deg, rgba(5,7,12,.05), rgba(5,7,12,.94) 14%, rgba(5,7,12,.98));
+    radial-gradient(circle at 78% 38%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 30%),
+    linear-gradient(180deg, rgba(5,7,12,.05), rgba(5,7,12,.93) 22%, rgba(5,7,12,.99));
   border-top: 1px solid rgba(255,255,255,.1);
+  isolation: isolate;
 }
 
 .detail-scroll-section::before {
@@ -61,97 +62,231 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(ellipse 55% 65% at 75% 45%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%);
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(90deg, black, transparent 88%);
+}
+
+.detail-scroll-section::after {
+  content: '';
+  position: absolute;
+  width: min(38vw, 520px);
+  aspect-ratio: 1;
+  right: -12vw;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 28px rgba(255,255,255,.012),
+    0 0 0 56px rgba(255,255,255,.008);
+  opacity: .7;
+  pointer-events: none;
+  z-index: -1;
 }
 
 .detail-scroll-inner {
   position: relative;
   z-index: 2;
-  width: min(100%, 1100px);
+  width: min(100%, 1280px);
   margin: 0 auto;
 }
 
 .detail-scroll-kicker {
-  margin: 0 0 1rem;
+  margin: 0 0 1.1rem;
   font: .62rem 'DM Mono', monospace;
   letter-spacing: .22em;
   color: var(--accent);
 }
 
+.detail-scroll-kicker::after {
+  content: '';
+  display: inline-block;
+  width: 72px;
+  height: 1px;
+  margin: 0 0 .2rem 1rem;
+  background: currentColor;
+  opacity: .5;
+}
+
 .detail-scroll-title {
   margin: 0;
-  max-width: 900px;
-  font: 500 clamp(3.5rem, 8vw, 8rem)/.82 'Cormorant Garamond', Georgia, serif;
-  letter-spacing: -.065em;
+  max-width: 1120px;
+  font: 500 clamp(3.8rem, 8.2vw, 9rem)/.79 'Cormorant Garamond', Georgia, serif;
+  letter-spacing: -.07em;
+  text-wrap: balance;
 }
 
 .detail-scroll-copy {
-  max-width: 720px;
-  margin: 2rem 0 0;
-  font: 500 clamp(1.1rem, 1.7vw, 1.55rem)/1.45 'Cormorant Garamond', Georgia, serif;
-  opacity: .78;
+  max-width: 760px;
+  margin: clamp(1.8rem, 3vw, 2.8rem) 0 0;
+  font: 500 clamp(1.12rem, 1.65vw, 1.5rem)/1.5 'Cormorant Garamond', Georgia, serif;
+  opacity: .8;
 }
 
 .detail-scroll-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1px;
-  margin-top: clamp(3rem, 7vw, 6rem);
-  border-top: 1px solid rgba(255,255,255,.16);
-  border-bottom: 1px solid rgba(255,255,255,.16);
+  gap: 0;
+  margin-top: clamp(2.8rem, 5vw, 5rem);
+  border: 1px solid rgba(255,255,255,.13);
+  background: rgba(255,255,255,.018);
 }
 
 .detail-scroll-fact {
-  padding: 1.4rem 1rem 1.5rem 0;
-  border-right: 1px solid rgba(255,255,255,.12);
+  min-height: 132px;
+  padding: 1.35rem 1.5rem 1.45rem;
+  border-right: 1px solid rgba(255,255,255,.11);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
 }
-.detail-scroll-fact:last-child { border-right: 0; padding-left: 1rem; }
-.detail-scroll-fact:nth-child(2) { padding-left: 1rem; }
+
+.detail-scroll-fact::after {
+  content: '↗';
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1rem;
+  font-size: .8rem;
+  opacity: .25;
+}
+
+.detail-scroll-fact:last-child { border-right: 0; }
 .detail-scroll-fact span {
   display: block;
-  margin-bottom: .55rem;
+  margin-bottom: 1rem;
   font: .56rem 'DM Mono', monospace;
   letter-spacing: .16em;
-  opacity: .48;
+  color: var(--accent);
+  opacity: .82;
 }
 .detail-scroll-fact strong {
-  font: 500 1.15rem 'Cormorant Garamond', Georgia, serif;
+  max-width: 90%;
+  font: 500 clamp(1.15rem, 1.8vw, 1.45rem)/1 'Cormorant Garamond', Georgia, serif;
 }
 
 .detail-scroll-story {
   display: grid;
-  grid-template-columns: .7fr 1.3fr;
-  gap: clamp(2.5rem, 9vw, 9rem);
+  grid-template-columns: minmax(240px, .75fr) minmax(0, 1.25fr);
+  gap: clamp(3rem, 9vw, 10rem);
   align-items: start;
 }
+
 .detail-scroll-story h3 {
   margin: 0;
-  font: 500 clamp(2.5rem, 5vw, 5rem)/.9 'Cormorant Garamond', Georgia, serif;
-  letter-spacing: -.05em;
+  font: 500 clamp(3.4rem, 6.5vw, 7rem)/.82 'Cormorant Garamond', Georgia, serif;
+  letter-spacing: -.065em;
+  position: sticky;
+  top: 7rem;
 }
-.detail-scroll-story p {
-  margin: 0 0 1.4rem;
-  font: 500 clamp(1.05rem, 1.5vw, 1.35rem)/1.55 'Cormorant Garamond', Georgia, serif;
+
+.detail-scroll-story h3::before {
+  content: '02';
+  display: block;
+  margin-bottom: 1.5rem;
+  font: .58rem 'DM Mono', monospace;
+  letter-spacing: .2em;
+  color: var(--accent);
+}
+
+.detail-scroll-heritage-copy {
+  display: grid;
+  gap: 2.2rem;
+  padding-top: .4rem;
+}
+
+.detail-scroll-heritage-copy p {
+  margin: 0;
+  font: 500 clamp(1.12rem, 1.65vw, 1.5rem)/1.55 'Cormorant Garamond', Georgia, serif;
   opacity: .76;
 }
 
+.detail-scroll-heritage-copy p:first-child {
+  font-size: clamp(1.55rem, 2.6vw, 2.45rem);
+  line-height: 1.18;
+  opacity: .95;
+  max-width: 820px;
+}
+
+.detail-scroll-callout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  align-items: start;
+  padding: 1.2rem 0 0;
+  border-top: 1px solid rgba(255,255,255,.15);
+  max-width: 820px;
+}
+
+.detail-scroll-callout span {
+  font: .56rem 'DM Mono', monospace;
+  letter-spacing: .16em;
+  color: var(--accent);
+}
+
+.detail-scroll-callout strong {
+  font: 500 1rem/1.35 'DM Mono', monospace;
+  letter-spacing: .02em;
+  opacity: .62;
+}
+
 .detail-scroll-end {
-  min-height: 55svh;
+  min-height: 68svh;
   display: grid;
   place-items: center;
   text-align: center;
-  background: rgba(3,5,9,.98);
+  background:
+    radial-gradient(circle at center, color-mix(in srgb, var(--accent) 9%, transparent), transparent 42%),
+    rgba(3,5,9,.98);
 }
+
+.detail-scroll-end::before {
+  background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(circle, black, transparent 70%);
+}
+
+.detail-scroll-end::after {
+  width: min(55vw, 760px);
+  right: auto;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: .45;
+}
+
+.detail-scroll-end > div {
+  position: relative;
+  z-index: 2;
+  width: min(90%, 1000px);
+}
+
 .detail-scroll-end p {
-  margin: 0 0 .9rem;
+  margin: 0 0 1.2rem;
   font: .58rem 'DM Mono', monospace;
-  letter-spacing: .22em;
+  letter-spacing: .24em;
   color: var(--accent);
 }
+
 .detail-scroll-end h3 {
   margin: 0;
-  font: 500 clamp(2.8rem, 6vw, 6rem)/.85 'Cormorant Garamond', Georgia, serif;
-  letter-spacing: -.06em;
+  font: 500 clamp(3.4rem, 8vw, 8rem)/.8 'Cormorant Garamond', Georgia, serif;
+  letter-spacing: -.07em;
+}
+
+.detail-scroll-end-meta {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  font: .55rem 'DM Mono', monospace;
+  letter-spacing: .15em;
+  opacity: .4;
 }
 
 .detail-scroll-hint {
@@ -180,12 +315,18 @@
 }
 
 @media (max-width: 800px) {
-  .detail-scroll-section { padding: 5rem 1.5rem; }
-  .detail-scroll-grid { grid-template-columns: 1fr; }
-  .detail-scroll-fact,
-  .detail-scroll-fact:nth-child(2),
-  .detail-scroll-fact:last-child { padding: 1.2rem 0; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.12); }
-  .detail-scroll-fact:last-child { border-bottom: 0; }
-  .detail-scroll-story { grid-template-columns: 1fr; gap: 2rem; }
   .detail-scroll-content { min-height: 330svh; }
+  .detail-scroll-section { min-height: 82svh; padding: 5rem 1.5rem; }
+  .detail-scroll-section::after { width: 75vw; right: -35vw; opacity: .4; }
+  .detail-scroll-title { font-size: clamp(3.25rem, 15vw, 6rem); }
+  .detail-scroll-grid { grid-template-columns: 1fr; }
+  .detail-scroll-fact { min-height: 100px; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.11); }
+  .detail-scroll-fact:last-child { border-bottom: 0; }
+  .detail-scroll-story { grid-template-columns: 1fr; gap: 2.5rem; }
+  .detail-scroll-story h3 { position: static; }
+  .detail-scroll-story h3::before { margin-bottom: 1rem; }
+  .detail-scroll-heritage-copy { gap: 1.7rem; }
+  .detail-scroll-callout { grid-template-columns: 1fr; gap: .5rem; }
+  .detail-scroll-end { min-height: 58svh; }
+  .detail-scroll-end-meta { flex-wrap: wrap; gap: .7rem 1.2rem; }
 }
