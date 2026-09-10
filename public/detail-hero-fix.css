@@ -1,4 +1,4 @@
-/* Detail hero = strict 50/50 editorial composition. The hero is viewport-fixed, then fades away with the copy as the archive begins. */
+/* Detail hero: strict 50/50 composition. It exists only during the opening scene and fades away before the archive. */
 .showcase.is-detail .product-stage {
   position: absolute !important;
   inset: 0 !important;
@@ -24,9 +24,10 @@
   will-change: transform, opacity;
   filter: drop-shadow(0 28px 22px rgba(0,0,0,.36)) !important;
   transition: none !important;
+  opacity: var(--detail-hero-opacity, 1) !important;
 }
 
-/* Exact left-half center: the copy's visual center sits at 25vw. */
+/* Exact left-half center: copy center = 25vw. */
 .showcase.is-detail .detail-copy {
   left: 25vw !important;
   top: 50vh !important;
@@ -37,14 +38,16 @@
   transform-origin: center center !important;
 }
 
-.showcase.is-detail .detail-copy > * {
-  width: 100%;
-  max-width: 100%;
-}
-
+.showcase.is-detail .detail-copy > * { width: 100%; max-width: 100%; }
 .showcase.is-detail .detail-copy h2 { max-width: 100%; }
 .showcase.is-detail .detail-description { max-width: 34rem; }
 .showcase.is-detail .detail-copy dl { max-width: 100%; }
+
+/* Hard stop: the archive can never render the hero bottle. */
+.showcase.is-detail.detail-archive-active .bottle[data-bottle-active="true"] {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
 
 @media (max-width: 800px) {
   .showcase.is-detail .bottle[data-bottle-active="true"] {
