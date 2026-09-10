@@ -1,4 +1,4 @@
-/* Detail hero: strict 50/50 composition. */
+/* Detail hero: strict compositional anchor. */
 .showcase.is-detail .product-stage {
   position: absolute !important;
   inset: 0 !important;
@@ -14,9 +14,11 @@
   pointer-events: none !important;
 }
 
+/* One positioning system: GSAP animates this custom property from the carousel
+   center to the measured right-edge-balanced detail anchor. */
 .showcase.is-detail .bottle[data-bottle-active="true"] {
   position: absolute !important;
-  left: 50% !important;
+  left: var(--detail-left, 50%) !important;
   top: 50% !important;
   z-index: 90 !important;
   visibility: visible !important;
@@ -38,7 +40,7 @@
 
 .showcase.is-detail.detail-closing .bottle[data-bottle-active="true"] {
   position: absolute !important;
-  left: 50% !important;
+  left: var(--detail-left, 50%) !important;
   top: 50% !important;
   z-index: 90 !important;
   opacity: 1 !important;
@@ -72,7 +74,7 @@
 
 @media (max-width: 800px) {
   .showcase.is-detail .bottle[data-bottle-active="true"] {
-    left: 50% !important;
+    left: var(--detail-left, 50%) !important;
     top: 50% !important;
     transform: translate3d(
       calc(-50% + var(--base-x, 0vw) + var(--parallax-x, 0px)),
