@@ -10,15 +10,27 @@
 
 .detail-view::-webkit-scrollbar { display: none; }
 
+/* The bottle belongs to the opening hero only. Keep the hero stage fixed while
+   the detail panel scrolls, then cleanly fade the bottle away before Story. */
+.product-stage {
+  transition: opacity .5s ease, transform .7s ease;
+}
+.showcase.detail-scrolled .product-stage {
+  opacity: 0 !important;
+  transform: scale(.985) translateY(-2vh);
+  pointer-events: none;
+}
+.showcase.detail-scrolled .bottle {
+  pointer-events: none;
+}
+
 .detail-scroll-content {
   position: relative;
   min-height: 300svh;
   padding-top: 100svh;
 }
 
-.detail-scroll-spacer {
-  height: 0;
-}
+.detail-scroll-spacer { height: 0; }
 
 .detail-scroll-section {
   position: relative;
