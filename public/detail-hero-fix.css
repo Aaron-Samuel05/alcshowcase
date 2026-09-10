@@ -14,9 +14,6 @@
   pointer-events: none !important;
 }
 
-/* Keep the hero in the SAME positioning system as the carousel while opening.
-   This is important: switching absolute -> fixed on .is-detail caused a visible
-   one-frame teleport before GSAP could animate --base-x from 0vw to 17vw. */
 .showcase.is-detail .bottle[data-bottle-active="true"] {
   position: absolute !important;
   left: 50% !important;
@@ -39,8 +36,6 @@
   transform-origin: center center !important;
 }
 
-/* During Back, keep exactly the same geometry. GSAP can therefore reverse the
-   same base variables without a fixed-position -> carousel-position jump. */
 .showcase.is-detail.detail-closing .bottle[data-bottle-active="true"] {
   position: absolute !important;
   left: 50% !important;
