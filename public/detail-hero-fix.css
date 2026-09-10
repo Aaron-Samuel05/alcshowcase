@@ -1,4 +1,4 @@
-/* Detail hero: strict 50/50 composition. It exists only during the opening scene and fades away before the archive. */
+/* Detail hero: strict 50/50 composition. The hero is a fixed visual during the opening scene, then fades away before the archive. */
 .showcase.is-detail .product-stage {
   position: absolute !important;
   inset: 0 !important;
@@ -14,6 +14,8 @@
   pointer-events: none !important;
 }
 
+/* Important: cancel the carousel's --base-x translation here. The old 25vw
+   carousel offset was being added on top of left:75vw, pushing the bottle off-screen. */
 .showcase.is-detail .bottle[data-bottle-active="true"] {
   position: fixed !important;
   left: 75vw !important;
@@ -25,6 +27,8 @@
   filter: drop-shadow(0 28px 22px rgba(0,0,0,.36)) !important;
   transition: none !important;
   opacity: var(--detail-hero-opacity, 1) !important;
+  transform: translate3d(calc(-50% + var(--parallax-x, 0px)), calc(-50% + var(--parallax-y, 0px)), 0) rotateX(var(--parallax-rx, 0deg)) rotateY(var(--parallax-ry, 0deg)) scale(1.18) !important;
+  transform-origin: center center !important;
 }
 
 /* Exact left-half center: copy center = 25vw. */
@@ -53,6 +57,7 @@
   .showcase.is-detail .bottle[data-bottle-active="true"] {
     left: 50vw !important;
     top: 31vh !important;
+    transform: translate3d(-50%, -50%, 0) scale(1.05) !important;
   }
   .showcase.is-detail .detail-copy {
     left: 50vw !important;
