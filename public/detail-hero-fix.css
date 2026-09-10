@@ -1,7 +1,8 @@
-/* Final detail hero isolation: the selected bottle is viewport-fixed and the carousel bottles are removed from the detail scene. */
+/* Detail mode: the product bottle belongs ONLY to the hero viewport. It must never follow the archive scroll. */
 .showcase.is-detail .product-stage {
   transform: none !important;
   z-index: 70 !important;
+  pointer-events: none;
 }
 
 .showcase.is-detail .bottle:not([data-bottle-active="true"]) {
@@ -11,24 +12,27 @@
 }
 
 .showcase.is-detail .bottle[data-bottle-active="true"] {
-  position: fixed !important;
+  position: absolute !important;
   left: 50% !important;
-  top: 49% !important;
+  top: 50% !important;
   z-index: 90 !important;
-  opacity: 1 !important;
   visibility: visible !important;
   pointer-events: none !important;
   filter: drop-shadow(0 28px 22px rgba(0,0,0,.36)) !important;
-  will-change: transform;
+  will-change: transform, opacity;
 }
 
 .showcase.is-detail .detail-view {
   z-index: 50;
 }
 
-/* The scrolling archive passes underneath the fixed hero bottle. */
 .showcase.is-detail .detail-scroll-content,
 .showcase.is-detail .detail-scroll-section {
   position: relative;
   z-index: 1;
+}
+
+/* Once the archive begins, the hero layer disappears instead of travelling with it. */
+.showcase.is-detail.detail-archive-active .product-stage {
+  pointer-events: none;
 }
