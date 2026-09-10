@@ -70,24 +70,36 @@
         </div>
       </div>
     `
+
+    if (!view.querySelector('.detail-scroll-hint')) {
+      const hint = document.createElement('div')
+      hint.className = 'detail-scroll-hint'
+      hint.innerHTML = 'SCROLL TO DISCOVER<span>↓</span>'
+      view.appendChild(hint)
+    }
+  }
+
+  function resetScroll(view) {
+    view.scrollTop = 0
+    requestAnimationFrame(() => { view.scrollTop = 0 })
   }
 
   function init(view) {
     if (!view || view.dataset.scrollReady === 'true') return
     view.dataset.scrollReady = 'true'
 
-    // The main showcase wheel handler intentionally locks wheel navigation.
-    // Stop the event at the detail panel so this panel can scroll normally.
-    view.addEventListener('wheel', (event) => {
-      event.stopPropagation()
-    }, { passive: true })
+    // Let the detail page consume wheel events instead of the showcase carousel.
+    view.addEventListener('wheel', (event) => event.stopPropagation(), { passive: true })
 
     const observer = new MutationObserver(() => {
-      if (view.getAttribute('aria-hidden') === 'false') buildDetails(view)
+      const isOpen = view.getAttribute('aria-hidden') === 'false'
+      buildDetails(view)
+      if (isOpen) resetScroll(view)
     })
     observer.observe(view, { attributes: true, attributeFilter: ['aria-hidden'] })
 
-    if (view.getAttribute('aria-hidden') === 'false') buildDetails(view)
+    buildDetails(view)
+    if (view.getAttribute('aria-hidden') === 'false') resetScroll(view)
   }
 
   const boot = () => {
