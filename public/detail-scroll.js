@@ -43,10 +43,11 @@
     const showcase = document.querySelector('.showcase'), copy = view.querySelector('.detail-copy')
     if (!showcase || !copy) return
     const hero = document.querySelector('.showcase.is-detail .bottle[data-bottle-active="true"]')
+    // Give the opening scene a slower, deliberate exit: 0 -> 100% over ~42% of a viewport.
     const progress = clamp01(view.scrollTop / Math.max(1, window.innerHeight * 0.9))
-    // The opening hero fades as one unit. The archive starts only after both are gone.
-    const fade = 1 - smoothstep(progress / 0.22)
-    const lift = smoothstep(progress / 0.22)
+    const fadeProgress = clamp01(progress / 0.42)
+    const fade = 1 - smoothstep(fadeProgress)
+    const lift = smoothstep(fadeProgress)
     copy.style.setProperty('--scroll-x', `${-18 * lift}px`)
     copy.style.setProperty('--scroll-y', `${-18 * lift}px`)
     copy.style.setProperty('--scroll-scale', `${1 - lift * 0.025}`)
