@@ -38,6 +38,17 @@
         })
         hero?.setAttribute('data-bottle-active', 'true')
       }
+
+      // Put the hero back into normal carousel geometry before React's Back
+      // handler runs its GSAP return animation. This prevents the fixed-position
+      // -> carousel-position jump that caused the visible lag.
+      document.addEventListener('click', (event) => {
+        const back = event.target.closest('.detail-back')
+        if (!back) return
+        const showcase = document.querySelector('.showcase.is-detail')
+        if (showcase) showcase.classList.add('detail-closing')
+      }, true)
+
       new MutationObserver(syncDetailBottle).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] })
       requestAnimationFrame(syncDetailBottle)
     </script>
