@@ -10,5 +10,15 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // Clicking any visible bottle uses the same action as the Explore button.
+      // Delegation keeps this working across React re-renders/product changes.
+      document.addEventListener('click', (event) => {
+        const bottle = event.target.closest('.bottle')
+        if (!bottle) return
+        const explore = document.querySelector('.explore')
+        if (explore) explore.click()
+      })
+    </script>
   </body>
 </html>
