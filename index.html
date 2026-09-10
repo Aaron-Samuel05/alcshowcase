@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/layout-fix.css" />
     <link rel="stylesheet" href="/typography.css" />
     <link rel="stylesheet" href="/detail-scroll.css" />
+    <link rel="stylesheet" href="/detail-hero-fix.css" />
     <title>alcproductshowcase-2</title>
   </head>
   <body>
@@ -22,7 +23,6 @@
       })
 
       // Mark only the actual hero bottle as the detail-view bottle.
-      // The hero is always the bottle with the largest base scale when detail opens.
       const syncDetailBottle = () => {
         const showcase = document.querySelector('.showcase')
         const bottles = [...document.querySelectorAll('.showcase .bottle')]
