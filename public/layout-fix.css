@@ -25,10 +25,12 @@
 .bottle-3 { margin-left: 0.5vw; }
 .bottle-4 { margin-left: 12vw; }
 
-/* Detail view: the hero composition intentionally lives on the right half.
-   These offsets compensate for the source PNG bounds so the visible bottle,
-   rather than its transparent image box, lands on the visual center. */
-.showcase.is-detail .bottle-1,
+/* Detail view: align the visible artwork, not the transparent PNG box.
+   New Amsterdam needs an additional 5.5vw optical correction so its visible
+   centre lands on the centre of the right half of the desktop composition. */
+.showcase.is-detail .bottle-1 {
+  margin-left: 8vw;
+}
 .showcase.is-detail .bottle-3 {
   margin-left: 2.5vw;
 }
