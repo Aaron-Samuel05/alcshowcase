@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="/layout-fix.css?v=20260910-6" />
     <link rel="stylesheet" href="/typography.css" />
     <link rel="stylesheet" href="/detail-scroll.css" />
@@ -16,6 +17,43 @@
     <script type="module" src="/src/main.jsx"></script>
     <script>
       document.addEventListener('click', (event) => {
+        const showcase = document.querySelector('.showcase')
+        if (!showcase) return
+
+        if (!showcase.classList.contains('is-detail')) {
+          const bottle = event.target.closest('.bottle')
+          if (bottle) {
+            const bottles = [...document.querySelectorAll('.showcase .bottle')]
+            const activeBottle = bottles.reduce((current, candidate) => {
+              const scale = parseFloat(getComputedStyle(candidate).getPropertyValue('--base-scale')) || 0
+              const currentScale = current ? parseFloat(getComputedStyle(current).getPropertyValue('--base-scale')) || 0 : -Infinity
+              return scale > currentScale ? candidate : current
+            }, null)
+            const clickedIndex = Number(bottle.dataset.bottleIndex)
+            const activeIndex = Number(activeBottle?.dataset.bottleIndex)
+            if (Number.isFinite(clickedIndex) && Number.isFinite(activeIndex) && clickedIndex !== activeIndex) {
+              event.preventDefault()
+              event.stopImmediatePropagation()
+              const buttons = [...document.querySelectorAll('.navigation button')]
+              const forwardDistance = (clickedIndex - activeIndex + bottles.length) % bottles.length
+              const forward = forwardDistance === 1
+              buttons[forward ? 1 : 0]?.click()
+              return
+            }
+          }
+        }
+
+        if (showcase.classList.contains('is-detail')) {
+          const detailTarget = event.target.closest('.detail-view')
+          const isBack = event.target.closest('.detail-back')
+          if (detailTarget && !isBack) {
+            event.preventDefault()
+            event.stopImmediatePropagation()
+            window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+            return
+          }
+        }
+
         const bottle = event.target.closest('.bottle')
         if (!bottle) return
         const explore = document.querySelector('.explore')
@@ -39,15 +77,10 @@
       }
 
       document.addEventListener('click', (event) => {
+        const back = event.target.closest('.detail-back')
+        if (!back) return
         const showcase = document.querySelector('.showcase.is-detail')
-        if (!showcase) return
-        if (event.target.closest('.detail-back')) {
-          showcase.classList.add('detail-closing')
-          return
-        }
-        if (event.target.closest('.detail-scroll-content')) return
-        if (event.target.closest('.bottle')) return
-        window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+        if (showcase) showcase.classList.add('detail-closing')
       }, true)
 
       document.addEventListener('click', (event) => {
