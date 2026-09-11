@@ -39,15 +39,17 @@
       }
 
       document.addEventListener('click', (event) => {
-        const back = event.target.closest('.detail-back')
-        if (!back) return
         const showcase = document.querySelector('.showcase.is-detail')
-        if (showcase) showcase.classList.add('detail-closing')
+        if (!showcase) return
+        if (event.target.closest('.detail-back')) {
+          showcase.classList.add('detail-closing')
+          return
+        }
+        if (event.target.closest('.detail-scroll-content')) return
+        if (event.target.closest('.bottle')) return
+        window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
       }, true)
 
-      // The detail-back button is rendered by React but the button itself has no
-      // React click handler. Forward its click to the existing Escape-key path,
-      // which calls the existing closeDetail() logic without changing the UI.
       document.addEventListener('click', (event) => {
         const back = event.target.closest('.detail-back')
         if (!back) return
