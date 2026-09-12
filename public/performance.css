@@ -42,6 +42,12 @@
   content-visibility: auto;
 }
 
+/* Side bottles are interactive navigation targets on the main showcase. */
+.showcase:not(.is-detail) .bottle {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .showcase .bottle,
   .showcase .title-wrap,
