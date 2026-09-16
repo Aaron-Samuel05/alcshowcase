@@ -26,22 +26,52 @@
     }
   }
 
+  let observer
+  let scheduled = false
+
+  const setText = (element, value) => {
+    if (element && element.textContent !== value) element.textContent = value
+  }
+
   const apply = () => {
+    scheduled = false
     const view = document.querySelector('.detail-view')
     if (!view || view.getAttribute('aria-hidden') !== 'false') return
+
     const name = (view.getAttribute('aria-label') || '').replace(/\s+details\s*$/i, '').trim()
     const item = content[name]
     if (!item) return
+
     const title = view.querySelector('.detail-scroll-title')
     const copy = view.querySelector('.detail-scroll-copy')
     const heritageTitle = [...view.querySelectorAll('h3')].find((el) => el.textContent.trim() === 'Where the story begins.')
     const heritageParagraphs = heritageTitle?.parentElement?.querySelectorAll('p') || []
-    if (title) title.textContent = item.title
-    if (copy) copy.textContent = item.story
-    if (heritageParagraphs[0]) heritageParagraphs[0].textContent = item.heritage
-    if (heritageParagraphs[1]) heritageParagraphs[1].textContent = item.craft
+
+    // Prevent our own text updates from triggering a MutationObserver feedback loop.
+    observer?.disconnect()
+    try {
+      setText(title, item.title)
+      setText(copy, item.story)
+      setText(heritageParagraphs[0], item.heritage)
+      setText(heritageParagraphs[1], item.craft)
+    } finally {
+      observer?.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['aria-hidden'] })
+    }
   }
 
-  new MutationObserver(apply).observe(document.body, { childList:true, subtree:true, attributes:true, attributeFilter:['aria-hidden'] })
+  const scheduleApply = () => {
+    if (scheduled) return
+    scheduled = true
+    requestAnimationFrame(apply)
+  }
+
+  observer = new MutationObserver(scheduleApply)
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['aria-hidden']
+  })
+
   requestAnimationFrame(apply)
 })()
