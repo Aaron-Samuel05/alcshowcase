@@ -1,0 +1,12 @@
+.showcase {
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.showcase:active {
+  cursor: grabbing;
+}
+
+.showcase.is-detail {
+  cursor: default;
+}
